@@ -24,6 +24,12 @@
       }
     ]
   },
+  "initialItemLayout": "grid",
+  "useTextFilter": true,
+  "useAccessFilter": true,
+  "useTypeFilter": true,
+  "useTypeKeywordsFilter": true,
+  "useTagsFilter": true,
   "itemTextFilter": "",
   "column_thumbnailUrl": false,
   "column_title": true,

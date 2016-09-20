@@ -240,16 +240,19 @@ define([
         dom.byId("info-group-title").innerHTML = this.groupInfo.title;
 
         // SET LAYOUT DISPLAY //
-        query(".layout-option").on("click", function (evt) {
+        var setItemLayout = function (layoutNode) {
           query(".layout-selected").removeClass("layout-selected");
-          domClass.add(evt.target, "layout-selected");
-          registry.byId("main-center-pane").selectChild(registry.byId(lang.replace("option-pane-{id}", evt.target)));
+          domClass.add(layoutNode, "layout-selected");
+          registry.byId("main-center-pane").selectChild(registry.byId(lang.replace("option-pane-{id}", layoutNode)));
+        };
+        if(this.config.initialItemLayout === "list") {
+          setItemLayout(dom.byId("layout-list"));
+        }
+        query(".layout-option").on("click", function (evt) {
+          setItemLayout(evt.target);
           this.applyFilter();
         }.bind(this));
 
-        // TOTAL ITEM COUNT //
-        this.itemTotal = groupItemsData.total;
-        this.itemCountLabelNode = dom.byId("item-count-label-node");
 
         // FETCH ALL //
         this.fetchAllNode = dom.byId("item-fetch-all-node");
@@ -265,28 +268,34 @@ define([
         }
 
         // FILTER ITEMS //
-        var filterInput = new TextBox({
-          style: "width:100%;padding:2px;color:#0079c1;",
-          value: this.config.itemTextFilter,
-          placeHolder: "...text filter...",
-          title: "Filter based on the title, summary, and description",
-          intermediateChanges: true,
-          onChange: function (filter) {
-            this.itemTextFilter = filter;
-            this.applyFilter();
-          }.bind(this)
-        }, "text-filter-input-node");
-
-        // CLEAR TEXT FILTER //
-        var clearTextFilterNode = dom.byId("clear-text-filter");
-        on(clearTextFilterNode, "click", function () {
-          filterInput.set("value", null);
-        });
-        // FILTER COUNT //
-        this.filterCountNode = dom.byId("filter-count-node");
+        if(this.config.useTextFilter) {
+          // TEXT FILTER INPUT //
+          var filterInput = new TextBox({
+            style: "width:100%;padding:2px;color:#0079c1;",
+            value: this.config.itemTextFilter,
+            placeHolder: "...text filter...",
+            title: "Filter based on the title, summary, and description",
+            intermediateChanges: true,
+            onChange: function (filter) {
+              this.itemTextFilter = filter;
+              this.applyFilter();
+            }.bind(this)
+          }, "text-filter-input-node");
+          // CLEAR TEXT FILTER //
+          var clearTextFilterNode = dom.byId("clear-text-filter");
+          on(clearTextFilterNode, "click", function () {
+            filterInput.set("value", null);
+          });
+        } else {
+          domClass.add("text-filter-pane", "dijitHidden");
+        }
 
         // INITIALIZE FILTERS //
         this.initializeFilters();
+
+        // TOTAL ITEM COUNT //
+        this.itemTotal = groupItemsData.total;
+        this.itemCountLabelNode = dom.byId("item-count-label-node");
 
         // ITEM STORE //
         this.itemStore = new TrackableMemory({ data: [] });
@@ -369,7 +378,7 @@ define([
 
         // LIST UPDATED
         this.itemList.on("dgrid-refresh-complete", function (evt) {
-          this.filterCountNode.innerHTML = lang.replace("{count} of {total}", {
+          dom.byId("filter-count-node").innerHTML = lang.replace("{count} of {total}", {
             count: evt.grid._total,
             total: this.itemStore.data.length
           });
@@ -562,122 +571,147 @@ define([
      */
     initializeFilters: function () {
 
-      // LIST OF ITEM ACCESS //
-      this.itemAccessList = new (declare([OnDemandList, Selection]))({
-        className: "dgrid-autoheight",
-        selectionMode: "single",
-        deselectOnRefresh: false,
-        loadingMessage: "Loading Items Access...",
-        noDataMessage: "No Item Access",
-        collection: null,
-        sort: "label",
-        renderRow: function (itemAccess, options) {
-          return domConstruct.create("div", { className: "item-type", innerHTML: itemAccess.label });
-        }
-      }, "item-access-list-node");
-      // ITEM TYPE SELECTED //
-      this.itemAccessList.on("dgrid-select", function (evt) {
-        this.itemAccess = evt.rows[0].data;
-        this.applyFilter();
-      }.bind(this));
-      this.itemAccessList.on("dgrid-deselect", function (evt) {
-        this.itemAccess = null;
-        this.applyFilter();
-      }.bind(this));
-      this.itemAccessList.startup();
+      // ITEM ACCESS FILTER //
+      if(this.config.useAccessFilter) {
+        // STORE OF ITEM ACCESS //
+        this.itemAccessStore = new TrackableMemory({ data: [] });
+        // ITEM ACCESS LIST //
+        this.itemAccessList = new (declare([OnDemandList, Selection]))({
+          className: "dgrid-autoheight",
+          selectionMode: "single",
+          deselectOnRefresh: false,
+          loadingMessage: "Loading Items Access...",
+          noDataMessage: "No Item Access",
+          collection: this.itemAccessStore,
+          sort: "label",
+          renderRow: function (itemAccess, options) {
+            return domConstruct.create("div", { className: "item-type", innerHTML: itemAccess.label });
+          }
+        }, "item-access-list-node");
+        // ITEM TYPE SELECTED //
+        this.itemAccessList.on("dgrid-select", function (evt) {
+          this.itemAccess = evt.rows[0].data;
+          this.applyFilter();
+        }.bind(this));
+        this.itemAccessList.on("dgrid-deselect", function (evt) {
+          this.itemAccess = null;
+          this.applyFilter();
+        }.bind(this));
+        this.itemAccessList.startup();
 
-      // CLEAR TYPE FILTER //
-      on(dom.byId("clear-access-filter"), "click", function () {
-        this.itemAccessList.clearSelection();
-      }.bind(this));
+        // CLEAR TYPE FILTER //
+        on(dom.byId("clear-access-filter"), "click", function () {
+          this.itemAccessList.clearSelection();
+        }.bind(this));
+      } else {
+        domClass.add("access-filter-pane", "dijitHidden");
+      }
 
+      // ITEM TYPES FILTER //
+      if(this.config.useTypeFilter) {
+        // STORE OF ITEM TYPES //
+        this.itemTypesStore = new TrackableMemory({ data: [] });
+        // ITEM TYPES LIST //
+        this.itemTypeList = new (declare([OnDemandList, Selection]))({
+          className: "dgrid-autoheight",
+          selectionMode: "single",
+          deselectOnRefresh: false,
+          loadingMessage: "Loading Items Types...",
+          noDataMessage: "No Item Types",
+          collection: this.itemTypesStore,
+          sort: "label",
+          renderRow: function (itemType, options) {
+            return domConstruct.create("div", { className: "item-type", innerHTML: itemType.label });
+          }
+        }, "item-type-list-node");
+        // ITEM TYPE SELECTED //
+        this.itemTypeList.on("dgrid-select", function (evt) {
+          this.itemType = evt.rows[0].data;
+          this.applyFilter();
+        }.bind(this));
+        this.itemTypeList.on("dgrid-deselect", function (evt) {
+          this.itemType = null;
+          this.applyFilter();
+        }.bind(this));
+        this.itemTypeList.startup();
 
-      // LIST OF ITEM TYPES //
-      this.itemTypeList = new (declare([OnDemandList, Selection]))({
-        className: "dgrid-autoheight",
-        selectionMode: "single",
-        deselectOnRefresh: false,
-        loadingMessage: "Loading Items Types...",
-        noDataMessage: "No Item Types",
-        collection: null,
-        sort: "label",
-        renderRow: function (itemType, options) {
-          return domConstruct.create("div", { className: "item-type", innerHTML: itemType.label });
-        }
-      }, "item-type-list-node");
-      // ITEM TYPE SELECTED //
-      this.itemTypeList.on("dgrid-select", function (evt) {
-        this.itemType = evt.rows[0].data;
-        this.applyFilter();
-      }.bind(this));
-      this.itemTypeList.on("dgrid-deselect", function (evt) {
-        this.itemType = null;
-        this.applyFilter();
-      }.bind(this));
-      this.itemTypeList.startup();
+        // CLEAR TYPE FILTER //
+        on(dom.byId("clear-type-filter"), "click", function () {
+          this.itemTypeList.clearSelection();
+        }.bind(this));
+      } else {
+        domClass.add("type-filter-pane", "dijitHidden");
+      }
 
-      // CLEAR TYPE FILTER //
-      on(dom.byId("clear-type-filter"), "click", function () {
-        this.itemTypeList.clearSelection();
-      }.bind(this));
+      // ITEM TYPE KEYWORDS FILTER //
+      if(this.config.useTypeKeywordsFilter) {
+        // STORE OF ITEM TYPE KEYWORDS //
+        this.itemTypeKeywordsStore = new TrackableMemory({ data: [] });
+        // LIST OF ITEM TYPE KEYWORDS//
+        this.itemTypeKeywordsList = new (declare([OnDemandList, Selection]))({
+          className: "dgrid-autoheight",
+          selectionMode: "toggle",
+          deselectOnRefresh: false,
+          loadingMessage: "Loading Items TypeKeywords...",
+          noDataMessage: "No Item TypeKeywords",
+          sort: "label",
+          collection: this.itemTypeKeywordsStore,
+          renderRow: function (itemType, options) {
+            return domConstruct.create("span", { className: "item-type-keywords", innerHTML: itemType.label });
+          }
+        }, "item-type-keywords-list-node");
+        // ITEM TYPE SELECTED //
+        this.itemTypeKeywordsList.on("dgrid-select", function (evt) {
+          this.itemTypeKeywords = this.itemTypeKeywordsList.selection;
+          this.applyFilter();
+        }.bind(this));
+        this.itemTypeKeywordsList.on("dgrid-deselect", function (evt) {
+          this.applyFilter();
+        }.bind(this));
+        this.itemTypeKeywordsList.startup();
 
+        // CLEAR TYPE FILTER //
+        on(dom.byId("clear-type-keywords-filter"), "click", function () {
+          this.itemTypeKeywordsList.clearSelection();
+        }.bind(this));
+      } else {
+        domClass.add("type-keywords-filter-pane", "dijitHidden");
+      }
 
-      // LIST OF ITEM TYPES //
-      this.itemTypeKeywordsList = new (declare([OnDemandList, Selection]))({
-        className: "dgrid-autoheight",
-        selectionMode: "toggle",
-        deselectOnRefresh: false,
-        loadingMessage: "Loading Items TypeKeywords...",
-        noDataMessage: "No Item TypeKeywords",
-        sort: "label",
-        collection: null,
-        renderRow: function (itemType, options) {
-          return domConstruct.create("span", { className: "item-type-keywords", innerHTML: itemType.label });
-        }
-      }, "item-type-keywords-list-node");
-      // ITEM TYPE SELECTED //
-      this.itemTypeKeywordsList.on("dgrid-select", function (evt) {
-        this.itemTypeKeywords = this.itemTypeKeywordsList.selection;
-        this.applyFilter();
-      }.bind(this));
-      this.itemTypeKeywordsList.on("dgrid-deselect", function (evt) {
-        this.applyFilter();
-      }.bind(this));
-      this.itemTypeKeywordsList.startup();
+      // ITEM TAGS FILTER //
+      if(this.config.useTagsFilter) {
+        // STORE OF ITEM TAGS //
+        this.itemTagsStore = new TrackableMemory({ data: [] });
+        // ITEM TAGS LIST //
+        this.itemTagList = new (declare([OnDemandList, Selection]))({
+          className: "dgrid-autoheight",
+          selectionMode: "toggle",
+          deselectOnRefresh: false,
+          loadingMessage: "Loading Items Tags...",
+          noDataMessage: "No Item Tags",
+          sort: "label",
+          collection: this.itemTagsStore,
+          renderRow: function (itemType, options) {
+            return domConstruct.create("span", { className: "item-tag", innerHTML: itemType.label });
+          }
+        }, "item-tag-list-node");
+        // ITEM TYPE SELECTED //
+        this.itemTagList.on("dgrid-select", function (evt) {
+          this.itemTags = this.itemTagList.selection;
+          this.applyFilter();
+        }.bind(this));
+        this.itemTagList.on("dgrid-deselect", function (evt) {
+          this.applyFilter();
+        }.bind(this));
+        this.itemTagList.startup();
 
-      // CLEAR TYPE FILTER //
-      on(dom.byId("clear-type-keywords-filter"), "click", function () {
-        this.itemTypeKeywordsList.clearSelection();
-      }.bind(this));
-
-
-      // LIST OF ITEM TYPES //
-      this.itemTagList = new (declare([OnDemandList, Selection]))({
-        className: "dgrid-autoheight",
-        selectionMode: "toggle",
-        deselectOnRefresh: false,
-        loadingMessage: "Loading Items Tags...",
-        noDataMessage: "No Item Tags",
-        sort: "label",
-        collection: null,
-        renderRow: function (itemType, options) {
-          return domConstruct.create("span", { className: "item-tag", innerHTML: itemType.label });
-        }
-      }, "item-tag-list-node");
-      // ITEM TYPE SELECTED //
-      this.itemTagList.on("dgrid-select", function (evt) {
-        this.itemTags = this.itemTagList.selection;
-        this.applyFilter();
-      }.bind(this));
-      this.itemTagList.on("dgrid-deselect", function (evt) {
-        this.applyFilter();
-      }.bind(this));
-      this.itemTagList.startup();
-
-      // CLEAR TYPE FILTER //
-      on(dom.byId("clear-tag-filter"), "click", function () {
-        this.itemTagList.clearSelection();
-      }.bind(this));
+        // CLEAR TYPE FILTER //
+        on(dom.byId("clear-tag-filter"), "click", function () {
+          this.itemTagList.clearSelection();
+        }.bind(this));
+      } else {
+        domClass.add("tags-filter-pane", "dijitHidden");
+      }
 
     },
 
@@ -685,15 +719,6 @@ define([
      * UPDATE FILTERS
      */
     updateFilters: function () {
-
-      // STORE OF ITEM ACCESS //
-      var itemAccessStore = new TrackableMemory({ data: [] });
-      // STORE OF ITEM TYPES //
-      var itemTypesStore = new TrackableMemory({ data: [] });
-      // STORE OF ITEM TYPES //
-      var itemTypeKeywordsStore = new TrackableMemory({ data: [] });
-      // STORE OF ITEM TYPES //
-      var itemTagsStore = new TrackableMemory({ data: [] });
 
       // WHY TYPE KEYWORD OF NULL? //
       var ignoreKeywords = ["null"];
@@ -703,54 +728,44 @@ define([
         array.forEach(items, function (item) {
 
           // ACCESS //
-          var itemAccess = itemAccessStore.getSync(item.access);
-          if(!itemAccess) {
-            itemAccessStore.add({
-              id: item.access,
-              label: item.access
-            });
+          if(this.config.useAccessFilter) {
+            var itemAccess = this.itemAccessStore.getSync(item.access);
+            if(!itemAccess) {
+              this.itemAccessStore.add({ id: item.access, label: item.access });
+            }
           }
 
           // TYPE //
-          var itemType = itemTypesStore.getSync(item.type);
-          if(!itemType) {
-            itemTypesStore.add({
-              id: item.type,
-              label: item.type
-            });
+          if(this.config.useTypeFilter) {
+            var itemType = this.itemTypesStore.getSync(item.type);
+            if(!itemType) {
+              this.itemTypesStore.add({ id: item.type, label: item.type });
+            }
           }
 
           // TYPE KEYWORDS //
-          array.forEach(item.typeKeywords, function (typeKeyword) {
-            if(array.indexOf(ignoreKeywords, typeKeyword) === -1) {
-              var itemTypeKeyword = itemTypeKeywordsStore.getSync(typeKeyword);
-              if(!itemTypeKeyword) {
-                itemTypeKeywordsStore.add({
-                  id: typeKeyword,
-                  label: typeKeyword
-                });
+          if(this.config.useTypeKeywordsFilter) {
+            array.forEach(item.typeKeywords, function (typeKeyword) {
+              if(array.indexOf(ignoreKeywords, typeKeyword) === -1) {
+                var itemTypeKeyword = this.itemTypeKeywordsStore.getSync(typeKeyword);
+                if(!itemTypeKeyword) {
+                  this.itemTypeKeywordsStore.add({ id: typeKeyword, label: typeKeyword });
+                }
               }
-            }
-          }.bind(this));
+            }.bind(this));
+          }
 
           // TAGS //
-          array.forEach(item.tags, function (tag) {
-            var itemTag = itemTagsStore.getSync(tag);
-            if(!itemTag) {
-              itemTagsStore.add({
-                id: tag,
-                label: tag
-              });
-            }
-          }.bind(this));
+          if(this.config.useTagsFilter) {
+            array.forEach(item.tags, function (tag) {
+              var itemTag = this.itemTagsStore.getSync(tag);
+              if(!itemTag) {
+                this.itemTagsStore.add({ id: tag, label: tag });
+              }
+            }.bind(this));
+          }
 
         }.bind(this));
-
-        // UPDATE LISTS //
-        this.itemAccessList.set("collection", itemAccessStore);
-        this.itemTypeList.set("collection", itemTypesStore);
-        this.itemTypeKeywordsList.set("collection", itemTypeKeywordsStore);
-        this.itemTagList.set("collection", itemTagsStore);
 
         // APPLY FILTERS //
         this.applyFilter();

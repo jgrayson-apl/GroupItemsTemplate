@@ -9,8 +9,66 @@
       ]
     },
     {
+      "category": "<b>Item Layout</b>",
+      "paragraph": "Initial item layout, either grid or list.",
+      "fields": [
+        {
+          "type": "options",
+          "fieldName": "initialItemLayout",
+          "label": "Initial Item Layout",
+          "tooltip": "Initial item layout",
+          "options": [
+            {
+              "label": "Grid View",
+              "value": "grid"
+            },
+            {
+              "label": "List View",
+              "value": "list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "<b>Item Columns</b>",
+      "paragraph": "Select the item filters available to the user.",
+      "fields": [
+        {
+          "type": "boolean",
+          "fieldName": "useTextFilter",
+          "label": "Use Text Filter",
+          "tooltip": "Allow user to filter based on item title, snipped, and description."
+        },
+        {
+          "type": "boolean",
+          "fieldName": "useAccessFilter",
+          "label": "Use Access Filter",
+          "tooltip": "Allow user to filter based on item access."
+        },
+        {
+          "type": "boolean",
+          "fieldName": "useTypeFilter",
+          "label": "Use Type Filter",
+          "tooltip": "Allow user to filter based on item type."
+        },
+        {
+          "type": "boolean",
+          "fieldName": "useTypeKeywordsFilter",
+          "label": "Use Type Keywords Filter",
+          "tooltip": "Allow user to filter based on item type keywords."
+        },
+        {
+          "type": "boolean",
+          "fieldName": "useTagsFilter",
+          "label": "Use Tags Filter",
+          "tooltip": "Allow user to filter based on item tags."
+        }
+      ]
+    },
+    {
       "category": "<b>Item Text Filter</b>",
-      "paragraph": "Filter based on the title, snippet, and tags (exact match).",
+      "paragraph": "Filter based on the title, snippet, or description.",
       "fields": [
         {
           "type": "string",
@@ -23,6 +81,7 @@
     },
     {
       "category": "<b>Item Columns</b>",
+      "paragraph": "Select the item properties initially visible in List View.",
       "fields": [
         {
           "type": "boolean",
@@ -137,6 +196,12 @@
   ],
   "values": {
     "group": "",
+    "initialItemLayout": "grid",
+    "useTextFilter": true,
+    "useAccessFilter": true,
+    "useTypeFilter": true,
+    "useTypeKeywordsFilter": true,
+    "useTagsFilter": true,
     "itemTextFilter": "",
     "column_thumbnailUrl": false,
     "column_title": true,
