@@ -316,7 +316,7 @@ define([
             var itemCard = domConstruct.create("div", { className: "item-card" });
             // THUMBNAIL //
             var imageParentNode = domConstruct.create("div", { className: "item-card-thumb" }, itemCard);
-            domConstruct.create("span", { className: "itemType itemType-" + item.type.replace(/ /g, "") }, imageParentNode);
+            domConstruct.create("span", { className: "itemType type-" + item.type.replace(/ /g, "") }, imageParentNode);
             domConstruct.create("img", { src: item.thumbnailUrl }, imageParentNode);
             // TITLE //
             domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCard);
