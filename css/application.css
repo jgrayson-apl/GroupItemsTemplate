@@ -1,0 +1,416 @@
+
+#main-container {
+  width  : 100%;
+  height : 100%;
+}
+
+#app-title {
+  font-size : 21pt;
+}
+
+#main-left-pane {
+  width : 350px;
+}
+
+#details-node,
+.filters-node {
+  margin     : 5px 5px 15px 5px;
+  padding    : 10px;
+  border     : solid 1px #ccc;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.filter-node-content {
+  margin : 3px !important;
+}
+
+#details-node .dijitTextBox {
+  border-color : #0079c1;
+}
+
+.info-node {
+  padding : 3px 5px;
+}
+
+.info-label {
+  display      : inline-block;
+  width        : 80px;
+  text-align   : right;
+  margin-right : 5px;
+  font-weight  : bold;
+}
+
+.info-value {
+  color : #0079c1;
+}
+
+.info-fetch-all {
+  cursor      : pointer;
+  margin-left : 10px;
+  padding     : 4px;
+  font-size   : 10pt;
+  color       : #999;
+  border      : solid 1px #eee;
+}
+
+.esri-icon-download {
+  padding-left : 5px !important;
+}
+
+.info-fetch-all:hover {
+  color        : #0079c1;
+  border-color : #0079c1;
+}
+
+.info-fetch-all:active {
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.layout-node {
+  /*...*/
+}
+
+.layout-option {
+  cursor  : pointer;
+  padding : 3px;
+  margin  : 0 3px;
+  color   : #999;
+  border  : solid 1px transparent;
+}
+
+.layout-option:hover {
+  border-color : #999;
+}
+
+.layout-option:active {
+  color        : #0079c1;
+  border-color : #0079c1;
+  box-shadow   : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.layout-option.layout-selected {
+  color        : #0079c1;
+  border-color : #0079c1;
+}
+
+.filter-count-label {
+  font-weight : bold;
+}
+
+.filter-node-header {
+  padding       : 10px;
+  border-bottom : solid 2px #0079c1;
+  position      : relative;
+}
+
+.filter-node-label {
+  font-weight : bold;
+}
+
+#text-filter-info {
+  margin-left : 10px;
+  padding     : 5px;
+  color       : #666;
+  font-size   : 9pt;
+  font-style  : italic;
+}
+
+.filters-node .esri-icon-close {
+  cursor         : pointer;
+  display        : inline-block;
+  font-size      : 10pt;
+  font-weight    : bold;
+  line-height    : 1.5;
+  vertical-align : middle;
+  position       : absolute;
+  right          : 5px;
+  color          : #666;
+}
+
+.filters-node .esri-icon-close:hover {
+  color : red;
+}
+
+.item-type-keywords,
+.item-tag {
+  float                       : left;
+  cursor                      : pointer;
+  margin                      : 2px;
+  padding                     : 2px;
+  font-size                   : 9pt;
+  background-color            : #efefef;
+  border                      : solid 1px #eee;
+  -webkit-transition-duration : 0.2s;
+  -moz-transition-duration    : 0.2s;
+  -o-transition-duration      : 0.2s;
+  -ms-transition-duration     : 0.2s;
+  transition-duration         : 0.2s;
+  -webkit-transition-property : background-color;
+  -moz-transition-property    : background-color;
+  -o-transition-property      : background-color;
+  -ms-transition-property     : background-color;
+  transition-property         : background-color;
+}
+
+.item-type {
+  cursor  : pointer;
+  padding : 3px;
+}
+
+.item-type:hover,
+.item-type-keywords:hover,
+.item-tag:hover {
+  color      : #0079c1;
+  background : #E1F3FF;
+}
+
+.item-pane,
+.item-pane .dijitContentPane {
+  padding : 0 !important;
+  margin  : 0 !important;
+}
+
+#main-center-pane {
+  overflow : hidden;
+}
+
+#main-center-pane .dijitContentPane {
+  overflow : hidden !important;
+}
+
+#item-grid-node,
+#item-list-node {
+  height : 100%;
+}
+
+.dgrid {
+  border : none !important;
+}
+
+.filters-node .dgrid-selected {
+  color      : #fff;
+  background : #0079c1;
+}
+
+.dgrid-no-data,
+.dgrid-loading {
+  color      : #999;
+  font-size  : 1.5em;
+  padding    : 1.5em;
+  text-align : center;
+}
+
+#item-grid-node .dgrid-highlight,
+#item-list-node .dgrid-highlight {
+  background-color : #ff6 !important;
+}
+
+#item-list-node .dgrid-row {
+  cursor        : pointer;
+  padding       : 5px 0 5px 0;
+  border-bottom : solid 1px #ccc;
+}
+
+#item-grid-node .dgrid-row,
+#item-list-node .dgrid-row {
+  -webkit-transition-duration : 0.2s;
+  -moz-transition-duration    : 0.2s;
+  -o-transition-duration      : 0.2s;
+  -ms-transition-duration     : 0.2s;
+  transition-duration         : 0.2s;
+  -webkit-transition-property : background-color;
+  -moz-transition-property    : background-color;
+  -o-transition-property      : background-color;
+  -ms-transition-property     : background-color;
+  transition-property         : background-color;
+}
+
+#item-list-node .dgrid-row {
+  font-size : 10pt;
+}
+
+#item-list-node .dgrid-row:hover {
+  color            : #0079c1;
+  background-color : #E1F3FF;
+}
+
+#item-list-node .dgrid-cell {
+  height         : 1em;
+  border         : none !important;
+  vertical-align : middle;
+}
+
+#item-list-node .dgrid-cell[role="columnheader"] {
+  padding          : 5px;
+  border-left      : solid 1px #999 !important;
+  border-bottom    : solid 1px #999 !important;
+  color            : #fff;
+  background-color : #0079c1;
+}
+
+.item-icon {
+  padding-left : 24px !important;
+}
+
+.item-thumbnail {
+  max-height : 40px;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-as-html {
+  font-style : italic;
+  color      : #999;
+  padding    : 2px;
+  min-height : 1.5em;
+  max-height : 5em;
+}
+
+.item-has-value .item-as-html {
+  font-style : unset;
+  color      : unset;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+  overflow   : auto !important;
+}
+
+.field-thumbnailUrl {
+  width      : 100px;
+  text-align : center;
+}
+
+.field-serviceName {
+  width : 200px;
+}
+
+.field-owner {
+  text-align    : right;
+  width         : 140px;
+  padding-right : 10px;
+}
+
+.field-owner[role="columnheader"] {
+  text-align : left !important;
+}
+
+.field-id {
+  width : 250px;
+}
+
+.field-access {
+  width : 80px;
+}
+
+.field-type {
+  width : 200px;
+}
+
+.field-title {
+  width : 250px;
+}
+
+.field-created,
+.field-modified {
+  width      : 225px;
+  text-align : right;
+}
+
+.item-card {
+  cursor           : pointer;
+  float            : left;
+  width            : 160px;
+  padding          : 10px;
+  margin           : 5px;
+  background-color : #efefef;
+  box-shadow       : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-card:hover {
+  color            : #0079c1;
+  background-color : #E1F3FF;
+}
+
+.item-card:active {
+  color      : #0079c1;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-card-thumb {
+  text-align : center;
+  margin-top : 10px;
+}
+
+.item-card-thumb img {
+  height     : 80px;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-card-title {
+  text-align  : center;
+  padding     : 5px;
+  font-size   : 10pt;
+  font-weight : bold;
+  height      : 3em;
+  overflow    : hidden;
+}
+
+.itemType {
+  position   : absolute;
+  margin     : -6px;
+  padding    : 3px;
+  width      : 16px;
+  height     : 16px;
+  background : rgba(255, 255, 255, 0.8) url(../images/item_type_icons/layersgray16.png) no-repeat center center;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.itemType-ExplorerMap {
+  background-image : url(../images/item_type_icons/mapsgray16.png);
+}
+
+.itemType-GeocodingService {
+  background-image : url(../images/item_type_icons/layers16.png);
+}
+
+.itemType-Geometry_Service {
+  background-image : url(../images/item_type_icons/layers16.png);
+}
+
+.itemType-GeoprocessingService {
+  background-image : url(../images/item_type_icons/layers16.png);
+}
+
+.itemType-GlobeService {
+  background-image : url(../images/item_type_icons/layers16.png);
+}
+
+.itemType-Layer {
+  background-image : url(../images/item_type_icons/layersgray16.png);
+}
+
+.itemType-LayerPackage {
+  background-image : url(../images/item_type_icons/layersgray16.png);
+}
+
+.itemType-MapDocument {
+  background-image : url(../images/item_type_icons/mapsgray16.png);
+}
+
+.itemType-MapService {
+  background-image : url(../images/item_type_icons/mapimages16.png);
+}
+
+.itemType-NetworkAnalysisService {
+  background-image : url(../images/item_type_icons/layers16.png);
+}
+
+.itemType-WebMap {
+  background-image : url(../images/item_type_icons/maps16.png);
+}
+
+.itemType-WebMappingApplication {
+  background-image : url(../images/item_type_icons/apps16.png);
+}
+
+.dijitTooltip .dijitTooltipContainer {
+  opacity    : 1.0;
+  background : #0079c1;
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- Define the versions of IE that will be used to render the page. See Microsoft documentation for details. Optional. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <!-- End Responsive -->
+    <!-- Use protocol relative urls that way if the browser is viewing the page via HTTPS the js/css file will be requested using the HTTPS protocol -->
+    <link rel="stylesheet" href="//jsdev.arcgis.com/4.1/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="//jsdev.arcgis.com/4.1/dgrid/css/dgrid.css">
+    <link rel="stylesheet" href="//jsdev.arcgis.com/4.1/esri/css/main.css">
+    <!-- Load any application specific styles -->
+    <link rel="stylesheet" href="css/boilerplate.css">
+    <link rel="stylesheet" href="css/application.css">
+    <script type="text/javascript" src="js/dojoConfig.js"></script>
+    <script type="text/javascript" src="//jsdev.arcgis.com/4.1/"></script>
+    <script type="text/javascript">
+      require([
+        "dojo/ready",
+        "boilerplate",
+        "dojo/text!config/config.json",
+        "dojo/text!boilerplate/settings.json",
+        "application",
+        "dijit/form/TextBox"
+      ], function (ready, Boilerplate, configSettings, boilerplateSettings, app) {
+
+        ready(function () {
+
+          // This is an example template app. It uses the boilerplateResponse returned to create a webmap, webscene or show group info.
+          // You can edit the logic directly in the app.js file or you can just follow the pattern to create your own myApp.js class.
+          // NOTE: We recommend creating your own myApp.js class as it will be easier to merge future Boilerplate updates.
+          var exampleApp = new app();
+
+          // The Boilerplate uses the config and boilterplate JSON settings, and the URL parameters to fetch and create items from
+          // ArcGIS.com or your portal. The boilerplateResponse returned contains item, webmap, webscene and/or group info.
+          // NOTE: You shouldn't need to edit the Boilerplate code, but you will need to edit the JSON settings files.
+          new Boilerplate(JSON.parse(configSettings), JSON.parse(boilerplateSettings)).always(function (boilerplateResponse) {
+            exampleApp.init(boilerplateResponse);
+          });
+
+        });
+      });
+
+    </script>
+  </head>
+  <body class="boilerplate--loading">
+    <div class="boilerplate-loading-indicator">
+      <div class="boilerplate-loading-message" id="loading_message"></div>
+    </div>
+    <div id="main-container" class="claro" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false,design:'sidebar'">
+      <div id="main-left-pane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'left'">
+        <div id="details-node">
+          <div class="info-node">
+            <span class="info-label">User:</span>
+            <span id="info-user-fullname" class="info-value"></span>
+          </div>
+          <div class="info-node">
+            <span class="info-label">Portal:</span>
+            <span id="info-portal-name" class="info-value"></span>
+          </div>
+          <div class="info-node">
+            <span class="info-label">Group:</span>
+            <span id="info-group-title" class="info-value"></span>
+          </div>
+          <div class="info-node">
+            <span class="info-label">Layout:</span>
+            <span class="info-value layout-node">
+              <span id="layout-grid" class="layout-option esri-icon-basemap layout-selected" title="Grid View"></span>
+              <span id="layout-list" class="layout-option esri-icon-layer-list" title="List View"></span>
+            </span>
+          </div>
+          <div class="info-node">
+            <span class="info-label">Items:</span>
+            <span id="item-count-label-node" class="info-value"></span>
+            <span id="item-fetch-all-node" class="info-fetch-all esri-icon-download dijitHidden" title="Retrieve all remaining items in this group...">&nbsp;Fetch All</span>
+          </div>
+          <div class="info-node">
+            <span class="info-label">Filtered:</span>
+            <span id="filter-count-node" class="info-value"></span>
+          </div>
+        </div>
+        <div class="filters-node">
+          <div id="text-filter-node" class="filter-node-header">
+            <span class="filter-node-label">Text</span>
+            <span id="clear-text-filter" class="esri-icon-close" title="Clear Text Filter"></span>
+          </div>
+          <div id="text-filter-info">Title, Summary, and Description</div>
+          <div>
+            <div class="info-node">
+              <div id="text-filter-input-node"></div>
+            </div>
+          </div>
+        </div>
+        <div class="filters-node">
+          <div id="access-filter-node" class="filter-node-header">
+            <span class="filter-node-label">Access</span>
+            <span id="clear-access-filter" class="esri-icon-close" title="Clear Access Filter"></span>
+          </div>
+          <div id="item-access-list-node" class="filter-node-content"></div>
+        </div>
+        <div class="filters-node">
+          <div id="type-filter-node" class="filter-node-header">
+            <span class="filter-node-label">Type</span>
+            <span id="clear-type-filter" class="esri-icon-close" title="Clear Type Filter"></span>
+          </div>
+          <div id="item-type-list-node" class="filter-node-content"></div>
+        </div>
+        <div class="filters-node">
+          <div id="type-keywords-filter-node" class="filter-node-header">
+            <span class="filter-node-label">Type Keywords</span>
+            <span id="clear-type-keywords-filter" class="esri-icon-close" title="Clear Type Keywords Filter"></span>
+          </div>
+          <div id="item-type-keywords-list-node" class="filter-node-content"></div>
+        </div>
+        <div class="filters-node">
+          <div id="tag-filter-node" class="filter-node-header">
+            <span class="filter-node-label">Tags</span>
+            <span id="clear-tag-filter" class="esri-icon-close" title="Clear Tags Filter"></span>
+          </div>
+          <div id="item-tag-list-node" class="filter-node-content"></div>
+        </div>
+      </div>
+      <div id="main-center-pane" class="item-pane" data-dojo-type="dijit/layout/StackContainer" data-dojo-props="region:'center'">
+        <div id="option-pane-layout-grid" data-dojo-type="dijit/layout/ContentPane">
+          <div id="item-grid-node"></div>
+        </div>
+        <div id="option-pane-layout-list" data-dojo-type="dijit/layout/ContentPane">
+          <div id="item-list-node"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

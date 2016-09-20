@@ -1,0 +1,160 @@
+{
+  "configurationSettings": [
+    {
+      "category": "<b>Configure Group</b>",
+      "fields": [
+        {
+          "type": "group"
+        }
+      ]
+    },
+    {
+      "category": "<b>Item Text Filter</b>",
+      "paragraph": "Filter based on the title, snippet, and tags (exact match).",
+      "fields": [
+        {
+          "type": "string",
+          "fieldName": "itemTextFilter",
+          "label": "Text Filter",
+          "tooltip": "Text Filter",
+          "placeHolder": "enter text filter here"
+        }
+      ]
+    },
+    {
+      "category": "<b>Item Columns</b>",
+      "fields": [
+        {
+          "type": "boolean",
+          "fieldName": "column_thumbnailUrl",
+          "label": "Thumbnail",
+          "tooltip": "Thumbnail"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_title",
+          "label": "Title",
+          "tooltip": "Title"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_id",
+          "label": "ID",
+          "tooltip": "ID"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_accessInformation",
+          "label": "Credits",
+          "tooltip": "Credits"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_licenseInfo",
+          "label": "Access",
+          "tooltip": "Access"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_access",
+          "label": "Shared",
+          "tooltip": "Shared"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_snippet",
+          "label": "Summary",
+          "tooltip": "Summary"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_description",
+          "label": "Description",
+          "tooltip": "Description"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_type",
+          "label": "Type",
+          "tooltip": "Type"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_typeKeywords",
+          "label": "Type Keywords",
+          "tooltip": "Type Keywords"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_tags",
+          "label": "Tags",
+          "tooltip": "Tags"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_created",
+          "label": "Created",
+          "tooltip": "Created"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_modified",
+          "label": "Modified",
+          "tooltip": "Modified"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_owner",
+          "label": "Owner",
+          "tooltip": "Owner"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_avgRating",
+          "label": "Avg Rating",
+          "tooltip": "Avg Rating"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_numRatings",
+          "label": "Num Ratings",
+          "tooltip": "Num Ratings"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_numViews",
+          "label": "Num Views",
+          "tooltip": "Num Views"
+        },
+        {
+          "type": "boolean",
+          "fieldName": "column_numComments",
+          "label": "Num Comments",
+          "tooltip": "Num Comments"
+        }
+      ]
+    }
+  ],
+  "values": {
+    "group": "",
+    "itemTextFilter": "",
+    "column_thumbnailUrl": false,
+    "column_title": true,
+    "column_id": false,
+    "column_accessInformation": false,
+    "column_licenseInfo": false,
+    "column_access": false,
+    "column_snippet": true,
+    "column_description": false,
+    "column_type": true,
+    "column_typeKeywords": false,
+    "column_tags": false,
+    "column_created": false,
+    "column_modified": false,
+    "column_owner": false,
+    "column_avgRating": false,
+    "column_numRatings": false,
+    "column_numViews": false,
+    "column_numComments": false
+  }
+}

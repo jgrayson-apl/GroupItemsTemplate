@@ -1,0 +1,46 @@
+{
+  "appid": "",
+  "group": "1d1f24e8556642f49448f1c88b5a571b",
+  "title": "Group Items",
+  "webmap": "",
+  "webscene": "",
+  "portalUrl": "https://www.arcgis.com",
+  "oauthappid": "ZzJVFMzEKGHNmqMX",
+  "proxyUrl": "",
+  "units": "",
+  "helperServices": {
+    "geometry": {
+      "url": null
+    },
+    "printTask": {
+      "url": null
+    },
+    "elevationSync": {
+      "url": null
+    },
+    "geocode": [
+      {
+        "url": null
+      }
+    ]
+  },
+  "itemTextFilter": "",
+  "column_thumbnailUrl": false,
+  "column_title": true,
+  "column_id": false,
+  "column_accessInformation": false,
+  "column_licenseInfo": false,
+  "column_access": false,
+  "column_snippet": true,
+  "column_description": false,
+  "column_type": true,
+  "column_typeKeywords": false,
+  "column_tags": false,
+  "column_created": false,
+  "column_modified": false,
+  "column_owner": false,
+  "column_avgRating": false,
+  "column_numRatings": false,
+  "column_numViews": false,
+  "column_numComments": false
+}
