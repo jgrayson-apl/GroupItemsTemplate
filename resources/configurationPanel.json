@@ -31,7 +31,7 @@
       ]
     },
     {
-      "category": "<b>Item Columns</b>",
+      "category": "<b>Item Filters</b>",
       "paragraph": "Select the item filters available to the user.",
       "fields": [
         {
