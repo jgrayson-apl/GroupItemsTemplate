@@ -9,7 +9,7 @@
       ]
     },
     {
-      "category": "<b>Item Layout</b>",
+      "category": "<b>Layout</b>",
       "paragraph": "Initial item layout, either grid or list.",
       "fields": [
         {
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "category": "<b>Item Filters</b>",
+      "category": "<b>Filters</b>",
       "paragraph": "Select the item filters available to the user.",
       "fields": [
         {
@@ -67,7 +67,7 @@
       ]
     },
     {
-      "category": "<b>Item Text Filter</b>",
+      "category": "<b>Initial Text Filter</b>",
       "paragraph": "Filter based on the title, snippet, or description.",
       "fields": [
         {
@@ -80,7 +80,7 @@
       ]
     },
     {
-      "category": "<b>Item Columns</b>",
+      "category": "<b>Initial Item Columns</b>",
       "paragraph": "Select the item properties initially visible in List View.",
       "fields": [
         {
