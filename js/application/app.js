@@ -572,23 +572,12 @@ define([
       // ITEM ACCESS FILTER //
       if(this.config.useAccessFilter) {
 
+        // ACCESS INFOS //
         var accessInfos = {
-          public: {
-            label: "Everyone",
-            icon: "esri-icon-upload"
-          },
-          org: {
-            label: "Shared to Organization",
-            icon: "esri-icon-organization"
-          },
-          shared: {
-            label: "Shared to Groups",
-            icon: "esri-icon-group"
-          },
-          private: {
-            label: "Not Shared",
-            icon: "esri-icon-locked"
-          }
+          public: { label: "Everyone (public)", icon: "esri-icon-upload" },
+          org: { label: "Shared to Organization", icon: "esri-icon-organization" },
+          shared: { label: "Shared to Groups", icon: "esri-icon-group" },
+          private: { label: "Not Shared", icon: "esri-icon-locked" }
         };
 
         // STORE OF ITEM ACCESS //
