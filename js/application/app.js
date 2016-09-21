@@ -253,7 +253,6 @@ define([
           this.applyFilter();
         }.bind(this));
 
-
         // FETCH ALL //
         this.fetchAllNode = dom.byId("item-fetch-all-node");
         if(groupItemsData.results.length < groupItemsData.total) {
@@ -265,29 +264,6 @@ define([
             domClass.add(document.body, CSS.loading);
             this.getItems(groupItemsData.nextQueryParams, true);
           }.bind(this));
-        }
-
-        // FILTER ITEMS //
-        if(this.config.useTextFilter) {
-          // TEXT FILTER INPUT //
-          var filterInput = new TextBox({
-            style: "width:100%;padding:2px;color:#0079c1;",
-            value: this.config.itemTextFilter,
-            placeHolder: "...text filter...",
-            title: "Filter based on the title, summary, and description",
-            intermediateChanges: true,
-            onChange: function (filter) {
-              this.itemTextFilter = filter;
-              this.applyFilter();
-            }.bind(this)
-          }, "text-filter-input-node");
-          // CLEAR TEXT FILTER //
-          var clearTextFilterNode = dom.byId("clear-text-filter");
-          on(clearTextFilterNode, "click", function () {
-            filterInput.set("value", null);
-          });
-        } else {
-          domClass.add("text-filter-pane", "dijitHidden");
         }
 
         // INITIALIZE FILTERS //
@@ -313,7 +289,6 @@ define([
           }
         }.bind(this));
 
-
         // ITEM GRID //
         this.itemGrid = new (declare([OnDemandList, DijitRegistry]))({
           loadingMessage: "Loading Items...",
@@ -325,7 +300,7 @@ define([
             var itemCard = domConstruct.create("div", { className: "item-card" });
             // THUMBNAIL //
             var imageParentNode = domConstruct.create("div", { className: "item-card-thumb" }, itemCard);
-            domConstruct.create("span", { className: "itemType type-" + item.type.replace(/ /g, "") }, imageParentNode);
+            domConstruct.create("span", { className: "itemType-badge type-" + item.type.replace(/ /g, "") }, imageParentNode);
             domConstruct.create("img", { src: item.thumbnailUrl }, imageParentNode);
             // TITLE //
             domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCard);
@@ -571,8 +546,51 @@ define([
      */
     initializeFilters: function () {
 
+      // ITEM TEXT FILTER //
+      if(this.config.useTextFilter) {
+        // TEXT FILTER INPUT //
+        var filterInput = new TextBox({
+          style: "width:100%;padding:2px;color:#0079c1;",
+          value: this.config.itemTextFilter,
+          placeHolder: "...text filter...",
+          title: "Filter based on the title, summary, and description",
+          intermediateChanges: true,
+          onChange: function (filter) {
+            this.itemTextFilter = filter;
+            this.applyFilter();
+          }.bind(this)
+        }, "text-filter-input-node");
+        // CLEAR TEXT FILTER //
+        var clearTextFilterNode = dom.byId("clear-text-filter");
+        on(clearTextFilterNode, "click", function () {
+          filterInput.set("value", null);
+        });
+      } else {
+        domClass.add("text-filter-pane", "dijitHidden");
+      }
+
       // ITEM ACCESS FILTER //
       if(this.config.useAccessFilter) {
+
+        var accessInfos = {
+          public: {
+            label: "Everyone",
+            icon: "esri-icon-upload"
+          },
+          org: {
+            label: "Shared to Organization",
+            icon: "esri-icon-organization"
+          },
+          shared: {
+            label: "Shared to Groups",
+            icon: "esri-icon-group"
+          },
+          private: {
+            label: "Not Shared",
+            icon: "esri-icon-locked"
+          }
+        };
+
         // STORE OF ITEM ACCESS //
         this.itemAccessStore = new TrackableMemory({ data: [] });
         // ITEM ACCESS LIST //
@@ -585,7 +603,11 @@ define([
           collection: this.itemAccessStore,
           sort: "label",
           renderRow: function (itemAccess, options) {
-            return domConstruct.create("div", { className: "item-type", innerHTML: itemAccess.label });
+            var accessInfo = accessInfos[itemAccess.label];
+            var itemAccessNode = domConstruct.create("div", { className: "item-type" });
+            domConstruct.create("span", { className: "item-access " + accessInfo.icon }, itemAccessNode);
+            domConstruct.create("span", { className: "item-access-label", innerHTML: accessInfo.label }, itemAccessNode);
+            return itemAccessNode;
           }
         }, "item-access-list-node");
         // ITEM TYPE SELECTED //
@@ -621,7 +643,10 @@ define([
           collection: this.itemTypesStore,
           sort: "label",
           renderRow: function (itemType, options) {
-            return domConstruct.create("div", { className: "item-type", innerHTML: itemType.label });
+            var itemTypeNode = domConstruct.create("div", { className: "item-type" });
+            domConstruct.create("span", { className: "itemType-list type-" + itemType.label.replace(/ /g, "") }, itemTypeNode);
+            domConstruct.create("span", { className: "itemType-label", innerHTML: itemType.label }, itemTypeNode);
+            return itemTypeNode;
           }
         }, "item-type-list-node");
         // ITEM TYPE SELECTED //
