@@ -530,7 +530,7 @@ define([
       // ITEM TEXT FILTER //
       if(this.config.useTextFilter) {
         // TEXT FILTER INPUT //
-        var filterInput = new TextBox({
+        this.filterInput = new TextBox({
           style: "width:100%;padding:2px;color:#0079c1;",
           value: this.config.itemTextFilter,
           placeHolder: "...text filter...",
@@ -542,10 +542,9 @@ define([
           }.bind(this)
         }, "text-filter-input-node");
         // CLEAR TEXT FILTER //
-        var clearTextFilterNode = dom.byId("clear-text-filter");
-        on(clearTextFilterNode, "click", function () {
-          filterInput.set("value", null);
-        });
+        on(dom.byId("clear-text-filter"), "click", function () {
+          this.filterInput.set("value", null);
+        }.bind(this));
       } else {
         domClass.add("text-filter-pane", "dijitHidden");
       }
@@ -661,6 +660,7 @@ define([
           this.applyFilter();
         }.bind(this));
         this.itemTypeKeywordsList.on("dgrid-deselect", function (evt) {
+          this.itemTypeKeywords = null;
           this.applyFilter();
         }.bind(this));
         this.itemTypeKeywordsList.startup();
@@ -696,6 +696,7 @@ define([
           this.applyFilter();
         }.bind(this));
         this.itemTagList.on("dgrid-deselect", function (evt) {
+          this.itemTags = null;
           this.applyFilter();
         }.bind(this));
         this.itemTagList.startup();
@@ -769,29 +770,34 @@ define([
 
     /**
      *
+     * @param currentFiltersNode
+     * @param filterType
+     * @param filterLabel
+     * @param clearFilterCallback
+     */
+    addFilterToggle: function (currentFiltersNode, filterType, filterLabel, clearFilterCallback) {
+
+      var filterToggleNode = domConstruct.create("span", { className: "current-filter" }, currentFiltersNode);
+      domConstruct.create("span", { className: "current-filter-type", innerHTML: filterType }, filterToggleNode);
+      domConstruct.create("span", { className: "current-filter-label", innerHTML: filterLabel }, filterToggleNode);
+      var clearFilterNode = domConstruct.create("span", { className: "current-filter-icon esri-icon-close" }, filterToggleNode);
+      on(clearFilterNode, "click", clearFilterCallback);
+
+    },
+
+    /**
+     *
      */
     applyFilter: function () {
+
+      // LIST OF CURRENT FILTERS //
+      var currentFiltersNode = dom.byId("current-filters-node");
+      currentFiltersNode.innerHTML = "";
 
       // ITEM STORE FILTER //
       var itemStoreFilter = new this.itemStore.Filter();
       // FILTERED ITEMS //
       var filteredItems = this.itemStore;
-
-      // ITEM ACCESS FILTER //
-      if(this.itemAccess) {
-        // TYPE //
-        var itemAccessFilter = itemStoreFilter.eq("access", this.itemAccess.label);
-        // FILTERED ITEMS //
-        filteredItems = filteredItems.filter(itemAccessFilter);
-      }
-
-      // ITEM TYPE FILTER //
-      if(this.itemType) {
-        // TYPE //
-        var itemTypeFilter = itemStoreFilter.eq("type", this.itemType.label);
-        // FILTERED ITEMS //
-        filteredItems = filteredItems.filter(itemTypeFilter);
-      }
 
       // TEXT FILTER //
       if(this.itemTextFilter) {
@@ -806,18 +812,61 @@ define([
 
         // FILTERED ITEMS //
         filteredItems = filteredItems.filter(titleFilter.or(snippetFilter).or(descriptionFilter));
+
+        // ADD TO CURRENT LIST OF FILTERS //
+        this.addFilterToggle(currentFiltersNode, "Text: ", this.itemTextFilter, function () {
+          dom.byId("clear-text-filter").click();
+        }.bind(this));
       }
+
+      // ITEM ACCESS FILTER //
+      if(this.itemAccess) {
+        // TYPE //
+        var itemAccessFilter = itemStoreFilter.eq("access", this.itemAccess.label);
+        // FILTERED ITEMS //
+        filteredItems = filteredItems.filter(itemAccessFilter);
+
+        // ADD TO CURRENT LIST OF FILTERS //
+        var accessInfo = this.accessInfos[this.itemAccess.label];
+        this.addFilterToggle(currentFiltersNode, "Access: ", accessInfo.label, function () {
+          dom.byId("clear-access-filter").click();
+        }.bind(this));
+      }
+
+      // ITEM TYPE FILTER //
+      if(this.itemType) {
+        // TYPE //
+        var itemTypeFilter = itemStoreFilter.eq("type", this.itemType.label);
+        // FILTERED ITEMS //
+        filteredItems = filteredItems.filter(itemTypeFilter);
+
+        // ADD TO CURRENT LIST OF FILTERS //
+        this.addFilterToggle(currentFiltersNode, "Type: ", this.itemType.label,function () {
+          dom.byId("clear-type-filter").click();
+        }.bind(this));
+      }
+
 
       // TYPE KEYWORDS //
       if(this.itemTypeKeywords) {
         var typeKeywordsFilter = itemStoreFilter.contains("typeKeywords", Object.keys(this.itemTypeKeywords));
         filteredItems = filteredItems.filter(typeKeywordsFilter);
+
+        // ADD TO CURRENT LIST OF FILTERS //
+        this.addFilterToggle(currentFiltersNode, "Type Keywords: ", Object.keys(this.itemTypeKeywords),function () {
+          dom.byId("clear-type-keywords-filter").click();
+        }.bind(this));
       }
 
       // TAGS //
       if(this.itemTags) {
         var tagFilter = itemStoreFilter.contains("tags", Object.keys(this.itemTags));
         filteredItems = filteredItems.filter(tagFilter);
+
+        // ADD TO CURRENT LIST OF FILTERS //
+        this.addFilterToggle(currentFiltersNode, "Tags: ", Object.keys(this.itemTags),function () {
+          dom.byId("clear-tags-filter").click();
+        }.bind(this));
       }
 
       // UPDATE LIST //

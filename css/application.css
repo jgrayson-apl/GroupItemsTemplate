@@ -486,3 +486,52 @@
   opacity    : 1.0;
   background : #0079c1;
 }
+
+#current-filters-pane {
+
+}
+
+#current-filters-label {
+  font-weight    : bold;
+  vertical-align : middle;
+}
+
+#current-filters-node {
+  vertical-align : middle;
+}
+
+.current-filter {
+  cursor    : default;
+  margin    : 5px;
+  padding   : 5px;
+  font-size : 11px;
+  border    : solid 1px #999;
+}
+
+.current-filter:hover {
+  border-color : #0079c1;
+}
+
+.current-filter-type {
+  vertical-align : middle;
+}
+
+.current-filter-label {
+  vertical-align : middle;
+  font-weight    : bold;
+  color          : #0079c1;
+}
+
+.current-filter-icon {
+  cursor         : pointer;
+  vertical-align : middle;
+  margin-left    : 8px;
+}
+
+.current-filter-icon:hover {
+  color : red;
+}
+
+.current-filter-icon:active {
+  text-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
