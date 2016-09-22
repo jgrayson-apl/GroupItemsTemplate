@@ -73,7 +73,6 @@
 .layout-option {
   cursor  : pointer;
   padding : 3px;
-  margin  : 0 3px;
   color   : #999;
   border  : solid 1px transparent;
 }
