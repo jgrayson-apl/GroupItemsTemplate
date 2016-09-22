@@ -645,7 +645,7 @@ define([
         // LIST OF ITEM TYPE KEYWORDS//
         this.itemTypeKeywordsList = new (declare([OnDemandList, Selection]))({
           className: "dgrid-autoheight",
-          selectionMode: "toggle",
+          selectionMode: "single",
           deselectOnRefresh: false,
           loadingMessage: "Loading Items TypeKeywords...",
           noDataMessage: "No Item TypeKeywords",
@@ -680,7 +680,7 @@ define([
         // ITEM TAGS LIST //
         this.itemTagList = new (declare([OnDemandList, Selection]))({
           className: "dgrid-autoheight",
-          selectionMode: "toggle",
+          selectionMode: "single",
           deselectOnRefresh: false,
           loadingMessage: "Loading Items Tags...",
           noDataMessage: "No Item Tags",
