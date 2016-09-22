@@ -258,11 +258,10 @@ define([
         if(groupItemsData.results.length < groupItemsData.total) {
           domClass.remove(this.fetchAllNode, "dijitHidden");
           on(this.fetchAllNode, "click", function () {
-            if(groupItemsData.total - groupItemsData.results.length > 500) {
-              console.info("Too Many Items: ", groupItemsData);
-            }
             domClass.add(document.body, CSS.loading);
-            this.getItems(groupItemsData.nextQueryParams, true);
+            for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
+              this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this));
+            }
           }.bind(this));
         }
 
@@ -375,9 +374,8 @@ define([
      * ADD ITEMS TO LIST ONCE IT'S READY
      *
      * @param queryResponse
-     * @param fetchAll
      */
-    addItemsToList: function (queryResponse, fetchAll) {
+    addItemsToList: function (queryResponse) {
 
       // MAKE SURE EACH ITEM IS READY BEFORE ADDING TO STORE //
       array.forEach(queryResponse.results, function (item) {
@@ -386,29 +384,12 @@ define([
         }.bind(this));
       }.bind(this));
 
-      // GET MORE ITEMS IF AVAILABLE //
-      if(queryResponse.nextQueryParams.start > -1) {
-        if(fetchAll) {
-          this.getItems(queryResponse.nextQueryParams, true);
-        }
-      } else {
+      // NO MORE ITEMS TO RETRIEVE //
+      if(queryResponse.nextQueryParams.start == -1) {
         // UPDATE ITEM TYPE FILTER //
         this.updateFilters();
         domClass.remove(document.body, CSS.loading);
       }
-
-    },
-
-    /**
-     * GET ITEMS AND ADD TO STORE/LIST
-     *
-     * @param queryParameters
-     * @param fetchAll
-     */
-    getItems: function (queryParameters, fetchAll) {
-      this.portal.queryItems(queryParameters).then(function (response) {
-        this.addItemsToList(response, fetchAll);
-      }.bind(this));
     },
 
     /**
@@ -573,11 +554,11 @@ define([
       if(this.config.useAccessFilter) {
 
         // ACCESS INFOS //
-        var accessInfos = {
-          public: { label: "Everyone (public)", icon: "esri-icon-upload" },
-          org: { label: "Shared to Organization", icon: "esri-icon-organization" },
-          shared: { label: "Shared to Groups", icon: "esri-icon-group" },
-          private: { label: "Not Shared", icon: "esri-icon-locked" }
+        this.accessInfos = {
+          public: { label: "Everyone (public)", icon: "esri-icon-globe", sortOrder: 1 },
+          org: { label: "Shared to Organization", icon: "esri-icon-organization", sortOrder: 2 },
+          shared: { label: "Shared to Groups", icon: "esri-icon-group", sortOrder: 3 },
+          private: { label: "Not Shared", icon: "esri-icon-locked", sortOrder: 4 }
         };
 
         // STORE OF ITEM ACCESS //
@@ -590,14 +571,14 @@ define([
           loadingMessage: "Loading Items Access...",
           noDataMessage: "No Item Access",
           collection: this.itemAccessStore,
-          sort: "label",
+          sort: "sortOrder",
           renderRow: function (itemAccess, options) {
-            var accessInfo = accessInfos[itemAccess.label];
+            var accessInfo = this.accessInfos[itemAccess.label];
             var itemAccessNode = domConstruct.create("div", { className: "item-type" });
             domConstruct.create("span", { className: "item-access " + accessInfo.icon }, itemAccessNode);
             domConstruct.create("span", { className: "item-access-label", innerHTML: accessInfo.label }, itemAccessNode);
             return itemAccessNode;
-          }
+          }.bind(this)
         }, "item-access-list-node");
         // ITEM TYPE SELECTED //
         this.itemAccessList.on("dgrid-select", function (evt) {
@@ -745,7 +726,7 @@ define([
           if(this.config.useAccessFilter) {
             var itemAccess = this.itemAccessStore.getSync(item.access);
             if(!itemAccess) {
-              this.itemAccessStore.add({ id: item.access, label: item.access });
+              this.itemAccessStore.add({ id: item.access, label: item.access, sortOrder: this.accessInfos[item.access].sortOrder });
             }
           }
 
