@@ -794,6 +794,8 @@ define([
       var currentFiltersNode = dom.byId("current-filters-node");
       currentFiltersNode.innerHTML = "";
 
+      var needsClearAll = false;
+
       // ITEM STORE FILTER //
       var itemStoreFilter = new this.itemStore.Filter();
       // FILTERED ITEMS //
@@ -817,6 +819,9 @@ define([
         this.addFilterToggle(currentFiltersNode, "Text: ", this.itemTextFilter, function () {
           dom.byId("clear-text-filter").click();
         }.bind(this));
+
+        // NEEDS CLEAR ALL //
+        needsClearAll = true;
       }
 
       // ITEM ACCESS FILTER //
@@ -831,6 +836,9 @@ define([
         this.addFilterToggle(currentFiltersNode, "Access: ", accessInfo.label, function () {
           dom.byId("clear-access-filter").click();
         }.bind(this));
+
+        // NEEDS CLEAR ALL //
+        needsClearAll = true;
       }
 
       // ITEM TYPE FILTER //
@@ -841,9 +849,12 @@ define([
         filteredItems = filteredItems.filter(itemTypeFilter);
 
         // ADD TO CURRENT LIST OF FILTERS //
-        this.addFilterToggle(currentFiltersNode, "Type: ", this.itemType.label,function () {
+        this.addFilterToggle(currentFiltersNode, "Type: ", this.itemType.label, function () {
           dom.byId("clear-type-filter").click();
         }.bind(this));
+
+        // NEEDS CLEAR ALL //
+        needsClearAll = true;
       }
 
 
@@ -853,9 +864,12 @@ define([
         filteredItems = filteredItems.filter(typeKeywordsFilter);
 
         // ADD TO CURRENT LIST OF FILTERS //
-        this.addFilterToggle(currentFiltersNode, "Type Keywords: ", Object.keys(this.itemTypeKeywords),function () {
+        this.addFilterToggle(currentFiltersNode, "Type Keywords: ", Object.keys(this.itemTypeKeywords), function () {
           dom.byId("clear-type-keywords-filter").click();
         }.bind(this));
+
+        // NEEDS CLEAR ALL //
+        needsClearAll = true;
       }
 
       // TAGS //
@@ -864,7 +878,21 @@ define([
         filteredItems = filteredItems.filter(tagFilter);
 
         // ADD TO CURRENT LIST OF FILTERS //
-        this.addFilterToggle(currentFiltersNode, "Tags: ", Object.keys(this.itemTags),function () {
+        this.addFilterToggle(currentFiltersNode, "Tags: ", Object.keys(this.itemTags), function () {
+          dom.byId("clear-tag-filter").click();
+        }.bind(this));
+
+        // NEEDS CLEAR ALL //
+        needsClearAll = true;
+      }
+
+      if(needsClearAll) {
+        // ADD CLEAR ALL TO CURRENT LIST OF FILTERS //
+        this.addFilterToggle(currentFiltersNode, "Clear All", "", function () {
+          dom.byId("clear-text-filter").click();
+          dom.byId("clear-access-filter").click();
+          dom.byId("clear-type-filter").click();
+          dom.byId("clear-type-keywords-filter").click();
           dom.byId("clear-tag-filter").click();
         }.bind(this));
       }
