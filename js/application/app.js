@@ -338,7 +338,7 @@ define([
           window.open(itemDetailsPageUrl);
         }.bind(this);
 
-        // LIST UPDATED
+        // LIST UPDATED //
         this.itemList.on("dgrid-refresh-complete", function (evt) {
           dom.byId("filter-count-node").innerHTML = lang.replace("{count} of {total}", {
             count: evt.grid._total,
@@ -740,6 +740,8 @@ define([
 
           // TYPE KEYWORDS //
           if(this.config.useTypeKeywordsFilter) {
+
+
             array.forEach(item.typeKeywords, function (typeKeyword) {
               if(array.indexOf(ignoreKeywords, typeKeyword) === -1) {
                 var itemTypeKeyword = this.itemTypeKeywordsStore.getSync(typeKeyword);

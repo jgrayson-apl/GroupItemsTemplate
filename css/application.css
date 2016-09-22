@@ -97,8 +97,7 @@
 }
 
 .filter-node-header {
-  padding       : 10px;
-  margin-bottom : 5px;
+  padding       : 8px;
   border-bottom : solid 2px #0079c1;
   position      : relative;
 }
