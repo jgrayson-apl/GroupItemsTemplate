@@ -715,9 +715,6 @@ define([
      */
     updateFilters: function () {
 
-      // WHY TYPE KEYWORD OF NULL? //
-      var ignoreKeywords = ["null"];
-
       // POPULATE UNIQUE LIST OF ITEM TYPES //
       this.itemStore.fetch().then(function (items) {
         array.forEach(items, function (item) {
@@ -740,8 +737,8 @@ define([
 
           // TYPE KEYWORDS //
           if(this.config.useTypeKeywordsFilter) {
-
-
+            // WHY TYPE KEYWORD OF NULL? //
+            var ignoreKeywords = ["null"];
             array.forEach(item.typeKeywords, function (typeKeyword) {
               if(array.indexOf(ignoreKeywords, typeKeyword) === -1) {
                 var itemTypeKeyword = this.itemTypeKeywordsStore.getSync(typeKeyword);
