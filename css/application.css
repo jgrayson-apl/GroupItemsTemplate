@@ -338,7 +338,7 @@
   margin-top : 10px;
 }
 
-.item-card-thumb img {
+.item-card-thumb .item-card-thumbnail {
   height     : 80px;
   box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -365,121 +365,25 @@
 
 .itemType-badge {
   position      : absolute;
-  margin        : -5px;
-  padding       : 3px;
-  width         : 16px;
-  height        : 16px;
-  background    : rgba(255, 255, 255, 0.9) url(../images/error.png) no-repeat center center;
+  margin        : -6px;
+  background    : rgba(255, 255, 255, 0.9);
   border        : solid 1px #ccc;
   border-radius : 2px;
 }
 
-.itemType-list {
+.item-card-badge {
+  width   : 16px;
+  height  : 16px;
+  padding : 3px;
+  vertical-align: middle;
+}
+
+.itemType-icon {
   display        : inline-block;
   vertical-align : middle;
   margin-right   : 5px;
   width          : 16px;
   height         : 16px;
-  background     : url(../images/error.png) no-repeat center center;
-}
-
-.type-MapPackage,
-.type-MapDocument,
-.type-ExplorerMap {
-  background-image : url(../images/item_type_icons/mapsgray16.png);
-}
-
-.type-GeocodingService,
-.type-GeometryService,
-.type-GeoprocessingService,
-.type-WorkflowManagerService,
-.type-NetworkAnalysisService {
-  background-image : url(../images/item_type_icons/toolsgray16.png);
-}
-
-.type-KML,
-.type-KMLCollection,
-.type-WMS,
-.type-WFS,
-.type-WMTS,
-.type-VectorTileService,
-.type-GeodataService,
-.type-GlobeService {
-  background-image : url(../images/item_type_icons/layers16.png);
-}
-
-.type-Layer,
-.type-LayerPackage {
-  background-image : url(../images/item_type_icons/layersgray16.png);
-}
-
-.type-ImageService {
-  background-image : url(../images/item_type_icons/imagery16.png);
-}
-
-.type-FeatureService,
-.type-FeatureCollection,
-.type-FeatureCollectionTemplate {
-  background-image : url(../images/item_type_icons/features16.png);
-}
-
-.type-MapService {
-  background-image : url(../images/item_type_icons/mapimages16.png);
-}
-
-.type-ProMap,
-.type-WebMap {
-  background-image : url(../images/item_type_icons/maps16.png);
-}
-
-.type-SceneService {
-  background-image : url(../images/item_type_icons/sceneweblayer16.png);
-}
-
-.type-CityEngineWebScene,
-.type-WebScene,
-.type-360VRExperience {
-  background-image : url(../images/item_type_icons/webscene16.png);
-}
-
-.type-WebMappingApplication,
-.type-MobileApplication,
-.type-CodeAttachment,
-.type-OperationsDashboardAddIn,
-.type-OperationView,
-.type-OperationsDashboardExtension,
-.type-NativeApplication,
-.type-NativeApplicationTemplate,
-.type-NativeApplicationInstaller,
-.type-WorkforceProject,
-.type-Form,
-.type-InsightsWorkbook,
-.type-InsightsModel,
-.type-InsightsPage {
-  background-image : url(../images/item_type_icons/apps16.png);
-}
-
-.type-SymbolSet,
-.type-ColorSet,
-.type-Shapefile,
-.type-FileGeodatabase,
-.type-CSV,
-.type-CADDrawing,
-.type-ServiceDefinition,
-.type-DocumentLink,
-.type-MicrosoftWord,
-.type-MicrosoftPowerpoint,
-.type-MicrosoftExcel,
-.type-PDF,
-.type-Image,
-.type-VisioDocument,
-.type-iWorkKeynote,
-.type-iWorkPages,
-.type-iWorkNumbers,
-.type-ReportTemplate,
-.type-StatisticalDataCollection,
-.type-netCDF {
-  background-image : url(../images/item_type_icons/datafiles16.png);
 }
 
 .dijitTooltip .dijitTooltipContainer {

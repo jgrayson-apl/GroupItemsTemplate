@@ -60,6 +60,14 @@ define([
 
   return declare(null, {
 
+    // ACCESS INFOS //
+    accessInfos: {
+      public: { label: "Everyone (public)", iconClass: "esri-icon-globe", sortOrder: 1 },
+      org: { label: "Shared to Organization", iconClass: "esri-icon-organization", sortOrder: 2 },
+      shared: { label: "Shared to Groups", iconClass: "esri-icon-group", sortOrder: 3 },
+      private: { label: "Not Shared", iconClass: "esri-icon-locked", sortOrder: 4 }
+    },
+
     //--------------------------------------------------------------------------
     //
     //  Lifecycle
@@ -285,16 +293,19 @@ define([
           renderRow: function (item, options) {
             // ITEM CARD //
             var itemCard = domConstruct.create("div", { className: "item-card" });
-            // THUMBNAIL //
+            // THUMBNAIL PARENT //
             var imageParentNode = domConstruct.create("div", { className: "item-card-thumb" }, itemCard);
-            domConstruct.create("span", { className: "itemType-badge type-" + item.type.replace(/ /g, "") }, imageParentNode);
-            domConstruct.create("img", { src: item.thumbnailUrl }, imageParentNode);
+            // TYPE BADGE //
+            var iconBadgeNode = domConstruct.create("span", { className: "itemType-badge" }, imageParentNode);
+            domConstruct.create("img", { className: "item-card-badge", src: item.iconUrl }, iconBadgeNode);
+            // THUMBNAIL //
+            domConstruct.create("img", { className: "item-card-thumbnail", src: item.thumbnailUrl }, imageParentNode);
             // TITLE //
             domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCard);
             // TOOLTIP //
             var itemTooltip = new Tooltip({
               showDelay: 1000,
-              label: lang.replace("{snippet}<hr>A {type} by {owner}", item),
+              label: lang.replace("{snippet}<hr>A {displayName} by {owner}", item),
               connectId: [itemCard]
             });
             return itemCard;
@@ -355,6 +366,13 @@ define([
           domClass.remove(this.fetchAllNode, "dijitHidden");
           on(this.fetchAllNode, "click", function () {
             domClass.add(document.body, CSS.loading);
+            // TODO: LAST CALL NORMALLY CONTAINS FEWER AMOUNT OF ITEMS AND CAN FINISH FIRST (OR NOT LAST)
+            // TODO: AND THUS WE'RE UPDATING THE FILTERS BEFORE ALL OTHER ITEMS ARE RETRIEVED.
+            // TODO: MAYBE SKIP LAST ONE UNTIL THE OTHERS ARE DONE THEN CALL IT?
+            // TODO: - NOT COMPLETELY CONCURRENT, BUT CLOSE AND STILL BETTER THAN ITERATIVE CALLS
+            // TODO: AND THE FIRST CALL IS NOT CONCURRENT ANYWAYS. WE'D HAVE THE FIRST CALL ON STARTUP,
+            // TODO: THEN ON FETCH ALL WE'D CALL ALL OTHERS EXCEPT LAST CALL, THEN THE LAST CALL.
+            // TODO: ...THAT'S THREE SETS OF CALLS...
             for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
               this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this));
             }
@@ -552,14 +570,6 @@ define([
       // ITEM ACCESS FILTER //
       if(this.config.useAccessFilter) {
 
-        // ACCESS INFOS //
-        this.accessInfos = {
-          public: { label: "Everyone (public)", icon: "esri-icon-globe", sortOrder: 1 },
-          org: { label: "Shared to Organization", icon: "esri-icon-organization", sortOrder: 2 },
-          shared: { label: "Shared to Groups", icon: "esri-icon-group", sortOrder: 3 },
-          private: { label: "Not Shared", icon: "esri-icon-locked", sortOrder: 4 }
-        };
-
         // STORE OF ITEM ACCESS //
         this.itemAccessStore = new TrackableMemory({ data: [] });
         // ITEM ACCESS LIST //
@@ -572,10 +582,9 @@ define([
           collection: this.itemAccessStore,
           sort: "sortOrder",
           renderRow: function (itemAccess, options) {
-            var accessInfo = this.accessInfos[itemAccess.label];
             var itemAccessNode = domConstruct.create("div", { className: "item-type" });
-            domConstruct.create("span", { className: "item-access " + accessInfo.icon }, itemAccessNode);
-            domConstruct.create("span", { className: "item-access-label", innerHTML: accessInfo.label }, itemAccessNode);
+            domConstruct.create("span", { className: "item-access " + itemAccess.iconClass }, itemAccessNode);
+            domConstruct.create("span", { className: "item-access-label", innerHTML: itemAccess.label }, itemAccessNode);
             return itemAccessNode;
           }.bind(this)
         }, "item-access-list-node");
@@ -613,7 +622,7 @@ define([
           sort: "label",
           renderRow: function (itemType, options) {
             var itemTypeNode = domConstruct.create("div", { className: "item-type" });
-            domConstruct.create("span", { className: "itemType-list type-" + itemType.label.replace(/ /g, "") }, itemTypeNode);
+            domConstruct.create("img", { className: "itemType-icon", src: itemType.iconUrl }, itemTypeNode);
             domConstruct.create("span", { className: "itemType-label", innerHTML: itemType.label }, itemTypeNode);
             return itemTypeNode;
           }
@@ -724,15 +733,16 @@ define([
           if(this.config.useAccessFilter) {
             var itemAccess = this.itemAccessStore.getSync(item.access);
             if(!itemAccess) {
-              this.itemAccessStore.add({ id: item.access, label: item.access, sortOrder: this.accessInfos[item.access].sortOrder });
+              var accessInfo = this.accessInfos[item.access];
+              this.itemAccessStore.add(lang.mixin({}, accessInfo, { id: item.access }));
             }
           }
 
           // TYPE //
           if(this.config.useTypeFilter) {
-            var itemType = this.itemTypesStore.getSync(item.type);
+            var itemType = this.itemTypesStore.getSync(item.displayName);
             if(!itemType) {
-              this.itemTypesStore.add({ id: item.type, label: item.type });
+              this.itemTypesStore.add({ id: item.displayName, label: item.displayName, iconUrl: item.iconUrl });
             }
           }
 
@@ -827,13 +837,12 @@ define([
       // ITEM ACCESS FILTER //
       if(this.itemAccess) {
         // TYPE //
-        var itemAccessFilter = itemStoreFilter.eq("access", this.itemAccess.label);
+        var itemAccessFilter = itemStoreFilter.eq("access", this.itemAccess.id);
         // FILTERED ITEMS //
         filteredItems = filteredItems.filter(itemAccessFilter);
 
         // ADD TO CURRENT LIST OF FILTERS //
-        var accessInfo = this.accessInfos[this.itemAccess.label];
-        this.addFilterToggle(currentFiltersNode, "Access: ", accessInfo.label, function () {
+        this.addFilterToggle(currentFiltersNode, "Access: ", this.itemAccess.label, function () {
           dom.byId("clear-access-filter").click();
         }.bind(this));
 
@@ -844,7 +853,7 @@ define([
       // ITEM TYPE FILTER //
       if(this.itemType) {
         // TYPE //
-        var itemTypeFilter = itemStoreFilter.eq("type", this.itemType.label);
+        var itemTypeFilter = itemStoreFilter.eq("displayName", this.itemType.label);
         // FILTERED ITEMS //
         filteredItems = filteredItems.filter(itemTypeFilter);
 
