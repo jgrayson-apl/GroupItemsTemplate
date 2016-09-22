@@ -253,18 +253,6 @@ define([
           this.applyFilter();
         }.bind(this));
 
-        // FETCH ALL //
-        this.fetchAllNode = dom.byId("item-fetch-all-node");
-        if(groupItemsData.results.length < groupItemsData.total) {
-          domClass.remove(this.fetchAllNode, "dijitHidden");
-          on(this.fetchAllNode, "click", function () {
-            domClass.add(document.body, CSS.loading);
-            for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
-              this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this));
-            }
-          }.bind(this));
-        }
-
         // INITIALIZE FILTERS //
         this.initializeFilters();
 
@@ -360,6 +348,18 @@ define([
 
         // ADD ITEMS TO LIST //
         this.addItemsToList(groupItemsData, false);
+
+        // FETCH ALL //
+        this.fetchAllNode = dom.byId("item-fetch-all-node");
+        if(groupItemsData.results.length < groupItemsData.total) {
+          domClass.remove(this.fetchAllNode, "dijitHidden");
+          on(this.fetchAllNode, "click", function () {
+            domClass.add(document.body, CSS.loading);
+            for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
+              this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this));
+            }
+          }.bind(this));
+        }
 
         // CREATE ITEM TYPE FILTER //
         this.updateFilters();
