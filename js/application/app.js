@@ -865,7 +865,7 @@ define([
 
         // ADD TO CURRENT LIST OF FILTERS //
         this.addFilterToggle(currentFiltersNode, "Tags: ", Object.keys(this.itemTags),function () {
-          dom.byId("clear-tags-filter").click();
+          dom.byId("clear-tag-filter").click();
         }.bind(this));
       }
 
