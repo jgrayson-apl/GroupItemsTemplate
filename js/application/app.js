@@ -234,6 +234,10 @@ define([
       var info = groupInfoData.results[0];
       var items = groupItemsData.results;
 
+      /**
+       * CUSTOM GROUP TEMPLATE CODE STARTS HERE
+       */
+
       // PORTAL //
       this.portal = new Portal({ authMode: "immediate" });
       this.portal.load().then(function () {
@@ -360,6 +364,9 @@ define([
         // ADD ITEMS TO LIST //
         this.addItemsToList(groupItemsData, false);
 
+        // CREATE ITEM TYPE FILTER //
+        this.updateFilters();
+
         // FETCH ALL //
         this.fetchAllNode = dom.byId("item-fetch-all-node");
         if(groupItemsData.results.length < groupItemsData.total) {
@@ -378,9 +385,6 @@ define([
             }
           }.bind(this));
         }
-
-        // CREATE ITEM TYPE FILTER //
-        this.updateFilters();
 
         // APP READY //
         this._ready();
@@ -786,17 +790,18 @@ define([
      * @param clearFilterCallback
      */
     addFilterToggle: function (currentFiltersNode, filterType, filterLabel, clearFilterCallback) {
-
       var filterToggleNode = domConstruct.create("span", { className: "current-filter" }, currentFiltersNode);
       domConstruct.create("span", { className: "current-filter-type", innerHTML: filterType }, filterToggleNode);
       domConstruct.create("span", { className: "current-filter-label", innerHTML: filterLabel }, filterToggleNode);
       var clearFilterNode = domConstruct.create("span", { className: "current-filter-icon esri-icon-close" }, filterToggleNode);
-      on(clearFilterNode, "click", clearFilterCallback);
-
+      if(clearFilterCallback) {
+        on(clearFilterNode, "click", clearFilterCallback);
+      }
     },
 
     /**
-     *
+     * TODO: I DON'T LIKE THE AND/OR COMBINATION OF FILTERS... WILL HAVE TO THINK OF SOME
+     * TODO: BETTER WAY OF ALLOWING THE USER TO CONTROL THIS BEHAVIOR
      */
     applyFilter: function () {
 
@@ -869,6 +874,7 @@ define([
 
       // TYPE KEYWORDS //
       if(this.itemTypeKeywords) {
+        // TODO: DON'T THE CONTAINS FILTER AS IT REQUIRES AND EXACT MATCH...
         var typeKeywordsFilter = itemStoreFilter.contains("typeKeywords", Object.keys(this.itemTypeKeywords));
         filteredItems = filteredItems.filter(typeKeywordsFilter);
 
@@ -883,6 +889,7 @@ define([
 
       // TAGS //
       if(this.itemTags) {
+        // TODO: DON'T THE CONTAINS FILTER AS IT REQUIRES AND EXACT MATCH...
         var tagFilter = itemStoreFilter.contains("tags", Object.keys(this.itemTags));
         filteredItems = filteredItems.filter(tagFilter);
 

@@ -8,6 +8,10 @@
   font-size : 21pt;
 }
 
+#main-top-pane {
+  border-bottom: 6px solid #0079c1;
+}
+
 #main-left-pane {
   width : 350px;
 }
@@ -22,6 +26,10 @@
 
 .filter-node-content {
   margin : 3px !important;
+}
+
+#filter-count-node {
+  vertical-align : middle;
 }
 
 #details-node .dijitTextBox {
@@ -372,10 +380,10 @@
 }
 
 .item-card-badge {
-  width   : 16px;
-  height  : 16px;
-  padding : 3px;
-  vertical-align: middle;
+  width          : 16px;
+  height         : 16px;
+  padding        : 3px;
+  vertical-align : middle;
 }
 
 .itemType-icon {
@@ -391,8 +399,9 @@
   background : #0079c1;
 }
 
-#current-filters-pane {
-
+#current-layout-pane {
+  position : absolute;
+  right    : 10px;
 }
 
 #current-filters-label {
