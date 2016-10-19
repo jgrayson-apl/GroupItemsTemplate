@@ -809,7 +809,8 @@ define([
       var currentFiltersNode = dom.byId("current-filters-node");
       currentFiltersNode.innerHTML = "";
 
-      var needsClearAll = false;
+      // NEEDS CLEAR ALL OPTION //
+      var needsClearAll = 0;
 
       // ITEM STORE FILTER //
       var itemStoreFilter = new this.itemStore.Filter();
@@ -836,7 +837,7 @@ define([
         }.bind(this));
 
         // NEEDS CLEAR ALL //
-        needsClearAll = true;
+        ++needsClearAll;
       }
 
       // ITEM ACCESS FILTER //
@@ -852,7 +853,7 @@ define([
         }.bind(this));
 
         // NEEDS CLEAR ALL //
-        needsClearAll = true;
+        ++needsClearAll;
       }
 
       // ITEM TYPE FILTER //
@@ -868,13 +869,12 @@ define([
         }.bind(this));
 
         // NEEDS CLEAR ALL //
-        needsClearAll = true;
+        ++needsClearAll;
       }
-
 
       // TYPE KEYWORDS //
       if(this.itemTypeKeywords) {
-        // TODO: DON'T THE CONTAINS FILTER AS IT REQUIRES AND EXACT MATCH...
+        // TODO: DON'T USE THE CONTAINS FILTER AS IT REQUIRES AND EXACT MATCH...
         var typeKeywordsFilter = itemStoreFilter.contains("typeKeywords", Object.keys(this.itemTypeKeywords));
         filteredItems = filteredItems.filter(typeKeywordsFilter);
 
@@ -884,12 +884,12 @@ define([
         }.bind(this));
 
         // NEEDS CLEAR ALL //
-        needsClearAll = true;
+        ++needsClearAll;
       }
 
       // TAGS //
       if(this.itemTags) {
-        // TODO: DON'T THE CONTAINS FILTER AS IT REQUIRES AND EXACT MATCH...
+        // TODO: DON'T USE THE CONTAINS FILTER AS IT REQUIRES AND EXACT MATCH...
         var tagFilter = itemStoreFilter.contains("tags", Object.keys(this.itemTags));
         filteredItems = filteredItems.filter(tagFilter);
 
@@ -899,10 +899,11 @@ define([
         }.bind(this));
 
         // NEEDS CLEAR ALL //
-        needsClearAll = true;
+        ++needsClearAll;
       }
 
-      if(needsClearAll) {
+      // IF WE HAVE MORE THAN ONE FILTER //
+      if(needsClearAll > 1) {
         // ADD CLEAR ALL TO CURRENT LIST OF FILTERS //
         this.addFilterToggle(currentFiltersNode, "Clear All", "", function () {
           dom.byId("clear-text-filter").click();
