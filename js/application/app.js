@@ -383,6 +383,12 @@ define([
             for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
               this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this));
             }
+            //
+            // TODO: OR... MAYBE WAIT FOR THEM ALL TO BE DONE AND THEN UPDATE FILTERS?  WE'D MOVE THE CHECK FROM
+            // TODO: USING THE NEXT QUERY PARAMS START TO USING PROMISES/ALL WITH AN ARRAY OF PROMISES
+            // TODO: HOWEVER... WE'D ALSO HAVE TO HANDLE THE USE CASE THAT ALL WERE RETRIEVED IN THE FIRST CALL
+            //
+
           }.bind(this));
         }
 

@@ -23,9 +23,14 @@
 .filters-node {
   margin     : 5px 5px 15px 5px;
   padding    : 10px;
-  /*background: #fafafa;*/
-  border     : solid 1px #ccc;
+  border     : solid 1px #ddd;
   box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#details-node {
+  background: #f8fbfe;
+  border-color : #0079c1;
+  box-shadow   : none;
 }
 
 .filter-node-content {
@@ -266,7 +271,7 @@
 
 .item-thumbnail {
   max-height : 40px;
-  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+  /*box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);*/
 }
 
 .item-as-html {
@@ -352,7 +357,7 @@
 
 .item-card-thumb .item-card-thumbnail {
   height     : 80px;
-  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .item-card-title {
