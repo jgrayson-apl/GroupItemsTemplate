@@ -54,17 +54,19 @@
     </div>
     <div id="main-container" class="claro" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false,design:'sidebar'">
       <div id="main-top-pane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
-        <span id="current-filters-pane">
-          <span id="current-filters-label">Filters:</span>
-          <span id="filter-count-node" class="info-value"></span>
-          <span id="current-filters-node"></span>
-        </span>
-        <span id="current-layout-pane">
-          <span class="info-value layout-node">
-            <span id="layout-list" class="layout-option esri-icon-layer-list" title="List View"></span>
-            <span id="layout-grid" class="layout-option esri-icon-basemap layout-selected" title="Grid View"></span>
+        <div id="top-pane-content">
+          <span id="current-filters-pane">
+            <span id="current-filters-label">Filters:</span>
+            <span id="filter-count-node" class="info-value"></span>
+            <span id="current-filters-node"></span>
           </span>
-        </span>
+            <span id="current-layout-pane">
+            <span class="info-value layout-node">
+              <span id="layout-list" class="layout-option esri-icon-layer-list" title="List View"></span>
+              <span id="layout-grid" class="layout-option esri-icon-basemap layout-selected" title="Grid View"></span>
+            </span>
+          </span>
+        </div>
       </div>
       <div id="main-center-pane" class="item-pane" data-dojo-type="dijit/layout/StackContainer" data-dojo-props="region:'center'">
         <div id="option-pane-layout-grid" data-dojo-type="dijit/layout/ContentPane">

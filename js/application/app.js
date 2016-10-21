@@ -929,6 +929,7 @@ define([
         this.itemGrid.set("collection", filteredItems);
       }
 
+      registry.byId("main-container").resize();
     }
 
   });
