@@ -19,7 +19,6 @@ define([
   "dojo/i18n!./nls/resources",
   "dojo/_base/declare",
   "dojo/_base/lang",
-  "dojo/_base/array",
   "dojo/query",
   "dojo/on",
   "dojo/Deferred",
@@ -41,7 +40,7 @@ define([
   "dijit/Tooltip",
   "esri/portal/Portal"
 ], function (ItemHelper, UrlParamHelper, i18n,
-             declare, lang, array, query, on, Deferred, all,
+             declare, lang, query, on, Deferred, all,
              Memory, Trackable, OnDemandList, OnDemandGrid, Selection, ColumnHider, DijitRegistry,
              dom, domAttr, domClass, domStyle, domConstruct, registry, TextBox, Tooltip, Portal) {
 
@@ -379,10 +378,7 @@ define([
         }.bind(this));
         this.itemList.startup();
 
-        /**
-         *
-         * @param item
-         */
+        // OPEN ITEM ACTION PAGE //
         var openItemActionPage = function (item) {
           // ACTION URL TEMPLATE //
           var pageActionUrlTemplate = "{protocol}//{urlKey}.{customBaseUrl}/home/item.html?id={itemId}";
@@ -394,31 +390,28 @@ define([
               pageActionUrlTemplate = "{itemUrl}";
               break;
           }
-          // ITEM ACTION URL //
-          var itemActionPageUrl = lang.replace(pageActionUrlTemplate, {
-            protocol: document.location.protocol,
-            urlKey: this.portal.urlKey,
-            customBaseUrl: this.portal.customBaseUrl,
-            itemId: item.id,
-            itemUrl: item.url
-          });
-          // OPEN ITEM ACTION URL //
-          window.open(itemActionPageUrl);
+          openItemPage(item, pageActionUrlTemplate);
         }.bind(this);
 
+        // OPEN ITEM DETAILS PAGE //
         var openItemDetailsPage = function (item) {
-          // ACTION URL TEMPLATE //
+          // DETAILS PAGE URL TEMPLATE //
           var detailsPageUrlTemplate = "{protocol}//{urlKey}.{customBaseUrl}/home/item.html?id={itemId}";
-          // ITEM DETAILS PAGE URL //
-          var itemDetailsPageUrl = lang.replace(detailsPageUrlTemplate, {
+          openItemPage(item, detailsPageUrlTemplate);
+        }.bind(this);
+
+        // OPEN ITEM RELATED PAGE //
+        var openItemPage = function (item, pageUrlTemplate) {
+          // ITEM RELATED PAGE URL //
+          var itemRelatedPageUrl = lang.replace(pageUrlTemplate, {
             protocol: document.location.protocol,
             urlKey: this.portal.urlKey,
             customBaseUrl: this.portal.customBaseUrl,
             itemId: item.id,
             itemUrl: item.url
           });
-          // OPEN ITEM DETAILS PAGE //
-          window.open(itemDetailsPageUrl);
+          // OPEN ITEM RELATED URL //
+          window.open(itemRelatedPageUrl);
         }.bind(this);
 
 
@@ -430,29 +423,27 @@ define([
           });
         }.bind(this));
 
-        // ADD ITEMS TO LIST //
+        // ADD INITIAL ITEMS TO LIST //
         this.addItemsToList(groupItemsData, false);
 
-        // CREATE ITEM TYPE FILTER //
-        this.updateFilters();
-
-        // FETCH ALL //
+        // IF THERE ARE MORE ITEMS THEN FETCH THEM ALL //
         if(groupItemsData.results.length < groupItemsData.total) {
 
-          domClass.add(document.body, CSS.loading);
+          // QUERY FOR ALL ITEMS //
           var allItemQueries = [];
           for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
             allItemQueries.push(this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this)));
           }
+          // WAIT FOR THEM ALL TO FINISH //
           all(allItemQueries).then(function () {
             this.updateFilters();
-            domClass.remove(document.body, CSS.loading);
+            this._ready();
           }.bind(this));
 
+        } else {
+          this.updateFilters();
+          this._ready();
         }
-
-        // APP READY //
-        this._ready();
 
       }.bind(this), this._ready);
 
@@ -463,14 +454,12 @@ define([
      * @param queryResponse
      */
     addItemsToList: function (queryResponse) {
-
       // MAKE SURE EACH ITEM IS READY BEFORE ADDING TO STORE //
-      array.forEach(queryResponse.results, function (item) {
+      queryResponse.results.forEach(function (item) {
         item.then(function () {
           this.itemStore.add(item);
         }.bind(this));
       }.bind(this));
-
     },
 
     /**
@@ -612,10 +601,10 @@ define([
       if(this.config.useTextFilter) {
         // TEXT FILTER INPUT //
         this.filterInput = new TextBox({
-          style: "width:100%;padding:2px;color:#0079c1;",
+          style: "width:100%; padding:5px;",
           value: this.config.itemTextFilter,
           placeHolder: "...text filter...",
-          title: "Filter based on the title, summary, and description",
+          title: "Filter based on the title, summary, or description",
           intermediateChanges: true,
           onChange: function (filter) {
             this.itemTextFilter = filter;
@@ -790,7 +779,7 @@ define([
 
       // POPULATE UNIQUE LIST OF ITEM TYPES //
       this.itemStore.fetch().then(function (items) {
-        array.forEach(items, function (item) {
+        items.forEach(function (item) {
 
           // ACCESS //
           if(this.config.useAccessFilter) {
@@ -813,8 +802,8 @@ define([
           if(this.config.useTypeKeywordsFilter) {
             // WHY TYPE KEYWORD OF NULL? //
             var ignoreKeywords = ["null"];
-            array.forEach(item.typeKeywords, function (typeKeyword) {
-              if(array.indexOf(ignoreKeywords, typeKeyword) === -1) {
+            item.typeKeywords.forEach(function (typeKeyword) {
+              if(ignoreKeywords.indexOf(typeKeyword) === -1) {
                 var itemTypeKeyword = this.itemTypeKeywordsStore.getSync(typeKeyword);
                 if(!itemTypeKeyword) {
                   this.itemTypeKeywordsStore.add({ id: typeKeyword, label: typeKeyword });
@@ -825,7 +814,7 @@ define([
 
           // TAGS //
           if(this.config.useTagsFilter) {
-            array.forEach(item.tags, function (tag) {
+            item.tags.forEach(function (tag) {
               var itemTag = this.itemTagsStore.getSync(tag);
               if(!itemTag) {
                 this.itemTagsStore.add({ id: tag, label: tag });
@@ -982,6 +971,7 @@ define([
         this.itemGrid.set("collection", filteredItems);
       }
 
+      // UPDATE PANES UI //
       registry.byId("main-container").resize();
     }
 
