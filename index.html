@@ -11,14 +11,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <!-- End Responsive -->
     <!-- Use protocol relative urls that way if the browser is viewing the page via HTTPS the js/css file will be requested using the HTTPS protocol -->
-    <link rel="stylesheet" href="//js.arcgis.com/4.1/dijit/themes/claro/claro.css">
-    <link rel="stylesheet" href="//js.arcgis.com/4.1/dgrid/css/dgrid.css">
-    <link rel="stylesheet" href="//js.arcgis.com/4.1/esri/css/main.css">
+    <link rel="stylesheet" href="//js.arcgis.com/4.2/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="//js.arcgis.com/4.2/dgrid/css/dgrid.css">
+    <link rel="stylesheet" href="//js.arcgis.com/4.2/esri/css/main.css">
     <!-- Load any application specific styles -->
     <link rel="stylesheet" href="css/boilerplate.css">
     <link rel="stylesheet" href="css/application.css">
     <script type="text/javascript" src="js/dojoConfig.js"></script>
-    <script type="text/javascript" src="//js.arcgis.com/4.1/"></script>
+    <script type="text/javascript" src="//js.arcgis.com/4.2/"></script>
     <script type="text/javascript">
       require([
         "dojo/ready",
@@ -90,11 +90,6 @@
           <div class="info-node">
             <span class="info-label">Group:</span>
             <span id="info-group-title" class="info-value"></span>
-          </div>
-          <div class="info-node">
-            <span class="info-label">Items:</span>
-            <span id="item-count-label-node" class="info-value"></span>
-            <span id="item-fetch-all-node" class="info-fetch-all esri-icon-download dijitHidden" title="Retrieve all remaining items in this group...">&nbsp;Fetch All</span>
           </div>
         </div>
         <div id="text-filter-pane" class="filters-node">

@@ -241,12 +241,6 @@ define([
         return;
       }
 
-      var info = groupInfoData.results[0];
-      var items = groupItemsData.results;
-
-      // GROUP DESCRIPTION //
-      dijit.byId("group-description-pane").containerNode.innerHTML = info.description;
-
       /**
        * CUSTOM GROUP TEMPLATE CODE STARTS HERE
        */
@@ -257,6 +251,10 @@ define([
 
         // GROUP INFO //
         this.groupInfo = groupInfoData.results[0];
+
+        // GROUP DESCRIPTION //
+        var groupDescriptionPane = dijit.byId("group-description-pane");
+        groupDescriptionPane.setContent(this.groupInfo.description);
 
         // DETAILS //
         var detailsNode = dom.byId("details-node");
@@ -281,24 +279,8 @@ define([
         // INITIALIZE FILTERS //
         this.initializeFilters();
 
-        // TOTAL ITEM COUNT //
-        this.itemTotal = groupItemsData.total;
-        this.itemCountLabelNode = dom.byId("item-count-label-node");
-
         // ITEM STORE //
         this.itemStore = new TrackableMemory({ data: [] });
-        // TRACK STORE UPDATES //
-        this.itemStoreTrack = this.itemStore.track();
-        this.itemStoreTrack.on("add", function () {
-          if(this.itemStore.data.length < this.itemTotal) {
-            this.itemCountLabelNode.innerHTML = lang.replace("{count} of {total}", {
-              count: this.itemStore.data.length,
-              total: this.itemTotal
-            });
-          } else {
-            this.itemCountLabelNode.innerHTML = this.itemTotal;
-          }
-        }.bind(this));
 
         // ITEM GRID //
         this.itemGrid = new (declare([OnDemandList, DijitRegistry]))({
@@ -308,31 +290,14 @@ define([
           sort: "title",
           renderRow: function (item, options) {
 
-            // ITEM CARD //
-            /*var itemCard = domConstruct.create("div", { className: "item-card" });
-             // THUMBNAIL PARENT //
-             var imageParentNode = domConstruct.create("div", { className: "item-card-thumb" }, itemCard);
-             // TYPE BADGE //
-             var iconBadgeNode = domConstruct.create("span", { className: "itemType-badge" }, imageParentNode);
-             domConstruct.create("img", { className: "item-card-badge", src: item.iconUrl }, iconBadgeNode);
-             // THUMBNAIL //
-             domConstruct.create("img", { className: "item-card-thumbnail", src: item.thumbnailUrl }, imageParentNode);
-             // TITLE //
-             domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCard);
-             // TOOLTIP //
-             var itemTooltip = new Tooltip({
-             showDelay: 1000,
-             label: lang.replace("{snippet}<hr>A {displayName} by {owner}", item),
-             connectId: [itemCard]
-             });*/
-
-
             // ITEM CARD NODE //
-            var itemCardNode = domConstruct.create("div", { className: "item-card", title: item.snippet });
+            var itemCardNode = domConstruct.create("div", { className: "item-card" });
             domStyle.set(itemCardNode, "background", lang.replace("url({thumbnailUrl}) no-repeat center center", item));
 
             // ITEM TITLE //
             var itemTitleNode = domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCardNode);
+            // ITEM TYPE ICON //
+            domConstruct.create("img", { className: "item-card-badge", src: item.iconUrl }, itemTitleNode, "first");
 
             // LINKS //
             var linksNode = domConstruct.create("div", { className: "item-card-links" }, itemCardNode);
@@ -346,8 +311,7 @@ define([
             };
 
             // ITEM DETAILS //
-            // NOTE: innerHTML IS SET HERE ONLY SO WE CAN FIND LINKS VIA query("a") //
-            var descriptionNode = linksNodesList["Details"] = domConstruct.create("a", { className: "item-card-link esri-icon-description", innerHTML: item.description, title: "Details" });
+            var descriptionNode = linksNodesList["Details"] = domConstruct.create("span", { className: "item-card-link esri-icon-description", innerHTML: item.description, title: "Details" });
             on(descriptionNode, "click", function () {
               openItemDetailsPage(item);
             }.bind(this));
@@ -382,6 +346,13 @@ define([
                 }
               }
             }
+
+            // TOOLTIP //
+            var itemTooltip = new Tooltip({
+              showDelay: 800,
+              label: lang.replace("<div class='item-snippet-text'>{snippet}</div><div class='item-snippet-info'>A {displayName} by {owner}</div>", item),
+              connectId: [itemCardNode]
+            });
 
             return itemCardNode;
           }.bind(this)
@@ -424,7 +395,7 @@ define([
               break;
           }
           // ITEM ACTION URL //
-          var itemDetailsPageUrl = lang.replace(pageActionUrlTemplate, {
+          var itemActionPageUrl = lang.replace(pageActionUrlTemplate, {
             protocol: document.location.protocol,
             urlKey: this.portal.urlKey,
             customBaseUrl: this.portal.customBaseUrl,
@@ -432,7 +403,7 @@ define([
             itemUrl: item.url
           });
           // OPEN ITEM ACTION URL //
-          window.open(itemDetailsPageUrl);
+          window.open(itemActionPageUrl);
         }.bind(this);
 
         var openItemDetailsPage = function (item) {
