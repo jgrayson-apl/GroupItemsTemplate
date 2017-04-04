@@ -14,21 +14,26 @@
 }
 
 #top-pane-content {
-  /*display        : flex;*/
-  /*flex-direction : row;*/
-  /*align-items    : center;*/
+  margin-top : 10px;
+}
+
+#group-description-pane {
+  height     : 150px;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 #main-left-pane {
   width : 350px;
 }
 
-#details-node,
+#details-node {
+  padding : 10px;
+  border  : solid 1px #0079c1;
+}
+
 .filters-node {
-  margin     : 5px 5px 15px 5px;
-  padding    : 10px;
-  border     : solid 1px #ddd;
-  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+  margin  : 5px 5px 10px 5px;
+  padding : 10px;
 }
 
 #details-node {
@@ -78,19 +83,6 @@
   padding-left : 5px !important;
 }
 
-.info-fetch-all:hover {
-  color        : #0079c1;
-  border-color : #0079c1;
-}
-
-.info-fetch-all:active {
-  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.layout-node {
-  /*...*/
-}
-
 .layout-option {
   cursor  : pointer;
   padding : 3px;
@@ -126,14 +118,6 @@
 
 .filter-node-label {
   font-weight : bold;
-}
-
-#text-filter-info {
-  margin-left : 10px;
-  padding     : 5px;
-  color       : #666;
-  font-size   : 9pt;
-  font-style  : italic;
 }
 
 .filters-node .esri-icon-close {
@@ -334,6 +318,8 @@
   text-align : right;
 }
 
+/* ==================================================================== */
+/*
 .item-card {
   cursor           : pointer;
   float            : left;
@@ -341,12 +327,12 @@
   padding          : 10px;
   margin           : 5px;
   background-color : #efefef;
-  box-shadow       : 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .item-card:hover {
   color            : #0079c1;
   background-color : #E1F3FF;
+  box-shadow       : 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .item-card:active {
@@ -371,7 +357,112 @@
   font-weight : bold;
   height      : 3em;
   overflow    : hidden;
+}*/
+
+/* ==================================================================== */
+
+.item-card {
+  cursor           : pointer;
+  position         : relative;
+  float            : left;
+  display          : flex;
+  flex-direction   : column;
+  justify-content  : space-between;
+  width            : 200px;
+  height           : 133px;
+  margin           : 4px;
+  background-color : #f6f6f6 !important;
+  border           : solid 2px transparent;
 }
+
+.item-card:hover {
+  border-color : rgba(0, 121, 193, 0.7);
+  box-shadow   : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-card-title {
+  cursor        : pointer;
+  white-space   : nowrap;
+  overflow      : hidden;
+  text-overflow : ellipsis;
+  font-size     : 10pt;
+  text-align    : center;
+  height        : auto;
+  padding       : 5px;
+  font-weight   : bold;
+  color         : #0079c1;
+  /*text-shadow : 1px 1px 0 #fff;*/
+  background    : rgba(255, 255, 255, 0.9);
+  border-bottom : solid 1px #ccc;
+  /*color       : #fff;*/
+  /*text-shadow : 1px 1px 0 #000;*/
+  /*background  : rgba(0, 121, 193, 0.8);*/
+
+  border-top    : solid 2px rgba(0, 121, 193, 0.8);
+  /*box-shadow  : 0 1px 2px rgba(0, 0, 0, 0.3);*/
+}
+
+.item-card:hover .item-card-title {
+  /*background : rgba(0, 121, 193, 0.9);*/
+  color               : #fff;
+  text-shadow         : 1px 1px 0 #000;
+  background          : rgba(0, 121, 193, 0.8);
+  border-top-color    : transparent;
+  border-bottom-color : transparent;
+  /*border-bottom : solid 2px #fff;*/
+}
+
+.item-card-links {
+  opacity    : 0.0;
+  align-self : flex-end;
+  padding    : 3px;
+  background : rgba(0, 121, 193, 0.7);
+}
+
+.item-card:hover .item-card-links {
+  opacity : 1.0;
+}
+
+.item-card-links:hover {
+  background : rgba(0, 121, 193, 0.9);
+}
+
+.item-card-link {
+  cursor    : pointer;
+  color     : #ddd;
+  font-size : 11pt;
+  padding   : 0 4px;
+}
+
+.item-card-link:hover {
+  color : #fff !important;
+}
+
+a.item-card-video-link,
+a.item-card-link {
+  text-decoration : none !important;
+}
+
+.item-card-video-link {
+  cursor     : pointer;
+  position   : absolute;
+  /*top        : 30px;*/
+  bottom     : 0;
+  left       : 0;
+  padding    : 4px;
+  font-size  : 10pt;
+  color      : #fff;
+  border     : solid 2px #fff;
+  background : rgba(0, 121, 193, 0.7);
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-card:hover .item-card-video-link {
+  background   : #0079c1;
+  border-color : #0079c1;
+}
+
+/* ==================================================================== */
 
 .item-access {
   display        : inline-block;

@@ -54,13 +54,14 @@
     </div>
     <div id="main-container" class="claro" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:false,design:'sidebar'">
       <div id="main-top-pane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
+        <div id="group-description-pane" data-dojo-type="dijit/layout/ContentPane"></div>
         <div id="top-pane-content">
           <span id="current-filters-pane">
             <span id="current-filters-label">Filters:</span>
             <span id="filter-count-node" class="info-value"></span>
             <span id="current-filters-node"></span>
           </span>
-            <span id="current-layout-pane">
+          <span id="current-layout-pane">
             <span class="info-value layout-node">
               <span id="layout-list" class="layout-option esri-icon-layer-list" title="List View"></span>
               <span id="layout-grid" class="layout-option esri-icon-basemap layout-selected" title="Grid View"></span>
@@ -98,10 +99,9 @@
         </div>
         <div id="text-filter-pane" class="filters-node">
           <div id="text-filter-node" class="filter-node-header">
-            <span class="filter-node-label">Text</span>
+            <span class="filter-node-label">Title, Summary, or Description</span>
             <span id="clear-text-filter" class="esri-icon-close" title="Clear Text Filter"></span>
           </div>
-          <div id="text-filter-info">Title, Summary, and Description</div>
           <div>
             <div class="info-node">
               <div id="text-filter-input-node"></div>

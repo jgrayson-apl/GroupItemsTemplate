@@ -23,6 +23,7 @@ define([
   "dojo/query",
   "dojo/on",
   "dojo/Deferred",
+  "dojo/promise/all",
   "dstore/Memory",
   "dstore/Trackable",
   "dgrid/OnDemandList",
@@ -33,15 +34,16 @@ define([
   "dojo/dom",
   "dojo/dom-attr",
   "dojo/dom-class",
+  "dojo/dom-style",
   "dojo/dom-construct",
   "dijit/registry",
   "dijit/form/TextBox",
   "dijit/Tooltip",
   "esri/portal/Portal"
 ], function (ItemHelper, UrlParamHelper, i18n,
-             declare, lang, array, query, on, Deferred,
+             declare, lang, array, query, on, Deferred, all,
              Memory, Trackable, OnDemandList, OnDemandGrid, Selection, ColumnHider, DijitRegistry,
-             dom, domAttr, domClass, domConstruct, registry, TextBox, Tooltip, Portal) {
+             dom, domAttr, domClass, domStyle, domConstruct, registry, TextBox, Tooltip, Portal) {
 
   //--------------------------------------------------------------------------
   //
@@ -66,6 +68,14 @@ define([
       org: { label: "Shared to Organization", iconClass: "esri-icon-organization", sortOrder: 2 },
       shared: { label: "Shared to Groups", iconClass: "esri-icon-group", sortOrder: 3 },
       private: { label: "Not Shared", iconClass: "esri-icon-locked", sortOrder: 4 }
+    },
+
+    // ITEM CARD LINK CLASS NAMES //
+    LINKS_CLASSNAMES: {
+      "Details": "item-card-link esri-icon-description",
+      "Read Me": "item-card-link esri-icon-documentation",
+      "Video": "item-card-video-link esri-icon-media2",
+      "Download": "item-card-link esri-icon-download"
     },
 
     //--------------------------------------------------------------------------
@@ -234,6 +244,9 @@ define([
       var info = groupInfoData.results[0];
       var items = groupItemsData.results;
 
+      // GROUP DESCRIPTION //
+      dijit.byId("group-description-pane").containerNode.innerHTML = info.description;
+
       /**
        * CUSTOM GROUP TEMPLATE CODE STARTS HERE
        */
@@ -284,7 +297,6 @@ define([
             });
           } else {
             this.itemCountLabelNode.innerHTML = this.itemTotal;
-            domClass.add(this.fetchAllNode, "dijitHidden");
           }
         }.bind(this));
 
@@ -295,30 +307,89 @@ define([
           collection: this.itemStore,
           sort: "title",
           renderRow: function (item, options) {
+
             // ITEM CARD //
-            var itemCard = domConstruct.create("div", { className: "item-card" });
-            // THUMBNAIL PARENT //
-            var imageParentNode = domConstruct.create("div", { className: "item-card-thumb" }, itemCard);
-            // TYPE BADGE //
-            var iconBadgeNode = domConstruct.create("span", { className: "itemType-badge" }, imageParentNode);
-            domConstruct.create("img", { className: "item-card-badge", src: item.iconUrl }, iconBadgeNode);
-            // THUMBNAIL //
-            domConstruct.create("img", { className: "item-card-thumbnail", src: item.thumbnailUrl }, imageParentNode);
-            // TITLE //
-            domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCard);
-            // TOOLTIP //
-            var itemTooltip = new Tooltip({
-              showDelay: 1000,
-              label: lang.replace("{snippet}<hr>A {displayName} by {owner}", item),
-              connectId: [itemCard]
+            /*var itemCard = domConstruct.create("div", { className: "item-card" });
+             // THUMBNAIL PARENT //
+             var imageParentNode = domConstruct.create("div", { className: "item-card-thumb" }, itemCard);
+             // TYPE BADGE //
+             var iconBadgeNode = domConstruct.create("span", { className: "itemType-badge" }, imageParentNode);
+             domConstruct.create("img", { className: "item-card-badge", src: item.iconUrl }, iconBadgeNode);
+             // THUMBNAIL //
+             domConstruct.create("img", { className: "item-card-thumbnail", src: item.thumbnailUrl }, imageParentNode);
+             // TITLE //
+             domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCard);
+             // TOOLTIP //
+             var itemTooltip = new Tooltip({
+             showDelay: 1000,
+             label: lang.replace("{snippet}<hr>A {displayName} by {owner}", item),
+             connectId: [itemCard]
+             });*/
+
+
+            // ITEM CARD NODE //
+            var itemCardNode = domConstruct.create("div", { className: "item-card", title: item.snippet });
+            domStyle.set(itemCardNode, "background", lang.replace("url({thumbnailUrl}) no-repeat center center", item));
+
+            // ITEM TITLE //
+            var itemTitleNode = domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCardNode);
+
+            // LINKS //
+            var linksNode = domConstruct.create("div", { className: "item-card-links" }, itemCardNode);
+
+            // MAKE SURE ICONS APPEAR IN CONSISTENT ORDER //
+            var linksNodesList = {
+              "Download": null,
+              "Video": null,
+              "Read Me": null,
+              "Details": null
+            };
+
+            // ITEM DETAILS //
+            // NOTE: innerHTML IS SET HERE ONLY SO WE CAN FIND LINKS VIA query("a") //
+            var descriptionNode = linksNodesList["Details"] = domConstruct.create("a", { className: "item-card-link esri-icon-description", innerHTML: item.description, title: "Details" });
+            on(descriptionNode, "click", function () {
+              openItemDetailsPage(item);
+            }.bind(this));
+
+            // GET LINKS FROM ITEM DESCRIPTION //
+            query("a", descriptionNode).forEach(function (node) {
+              if(node.innerText in linksNodesList) {
+                linksNodesList[node.innerText] = node;
+              }
             });
-            return itemCard;
+
+            // ADD ITEM LINKS //
+            for (var linkName in linksNodesList) {
+              var node = linksNodesList[linkName];
+              if(node) {
+
+                // LINK NODE PROPERTIES //
+                node.className = this.LINKS_CLASSNAMES[linkName];
+                node.title = node.title || linkName;
+                node.innerText = "";
+
+                // PREVENT CARD ITEM ACTION //
+                on(node, "click", function (evt) {
+                  evt.stopPropagation();
+                });
+
+                // PLACE VIDEO LINK SOME OTHER PLACE //
+                if(linkName === "Video") {
+                  domConstruct.place(node, itemCardNode);
+                } else {
+                  domConstruct.place(node, linksNode);
+                }
+              }
+            }
+
+            return itemCardNode;
           }.bind(this)
         }, "item-grid-node");
         // ITEM SELECTED //
         this.itemGrid.on(".dgrid-row:click", function (evt) {
           // OPEN ITEM DETAILS PAGE //
-          openItemDetailsPage(this.itemGrid.row(evt).data);
+          openItemActionPage(this.itemGrid.row(evt).data);
         }.bind(this));
         this.itemGrid.startup();
 
@@ -333,7 +404,7 @@ define([
         // ITEM SELECTED //
         this.itemList.on(".dgrid-row:click", function (evt) {
           // OPEN ITEM DETAILS PAGE //
-          openItemDetailsPage(this.itemList.row(evt).data);
+          openItemActionPage(this.itemList.row(evt).data);
         }.bind(this));
         this.itemList.startup();
 
@@ -341,17 +412,44 @@ define([
          *
          * @param item
          */
-        var openItemDetailsPage = function (item) {
-          // ITEM DETAILS PAGE URL //
-          var itemDetailsPageUrl = lang.replace("{protocol}//{urlKey}.{customBaseUrl}/home/item.html?id={itemId}", {
+        var openItemActionPage = function (item) {
+          // ACTION URL TEMPLATE //
+          var pageActionUrlTemplate = "{protocol}//{urlKey}.{customBaseUrl}/home/item.html?id={itemId}";
+          switch (item.type) {
+            case "Web Map":
+              pageActionUrlTemplate = "{protocol}//{urlKey}.{customBaseUrl}/home/webmap/viewer.html?webmap={itemId}";
+              break;
+            case "Web Mapping Application":
+              pageActionUrlTemplate = "{itemUrl}";
+              break;
+          }
+          // ITEM ACTION URL //
+          var itemDetailsPageUrl = lang.replace(pageActionUrlTemplate, {
             protocol: document.location.protocol,
             urlKey: this.portal.urlKey,
             customBaseUrl: this.portal.customBaseUrl,
-            itemId: item.id
+            itemId: item.id,
+            itemUrl: item.url
           });
-          // OPEN ITEM DEATILS PAGE //
+          // OPEN ITEM ACTION URL //
           window.open(itemDetailsPageUrl);
         }.bind(this);
+
+        var openItemDetailsPage = function (item) {
+          // ACTION URL TEMPLATE //
+          var detailsPageUrlTemplate = "{protocol}//{urlKey}.{customBaseUrl}/home/item.html?id={itemId}";
+          // ITEM DETAILS PAGE URL //
+          var itemDetailsPageUrl = lang.replace(detailsPageUrlTemplate, {
+            protocol: document.location.protocol,
+            urlKey: this.portal.urlKey,
+            customBaseUrl: this.portal.customBaseUrl,
+            itemId: item.id,
+            itemUrl: item.url
+          });
+          // OPEN ITEM DETAILS PAGE //
+          window.open(itemDetailsPageUrl);
+        }.bind(this);
+
 
         // LIST UPDATED //
         this.itemList.on("dgrid-refresh-complete", function (evt) {
@@ -368,28 +466,18 @@ define([
         this.updateFilters();
 
         // FETCH ALL //
-        this.fetchAllNode = dom.byId("item-fetch-all-node");
         if(groupItemsData.results.length < groupItemsData.total) {
-          domClass.remove(this.fetchAllNode, "dijitHidden");
-          on(this.fetchAllNode, "click", function () {
-            domClass.add(document.body, CSS.loading);
-            // TODO: LAST CALL NORMALLY CONTAINS FEWER AMOUNT OF ITEMS AND CAN FINISH FIRST (OR NOT LAST)
-            // TODO: AND THUS WE'RE UPDATING THE FILTERS BEFORE ALL OTHER ITEMS ARE RETRIEVED.
-            // TODO: MAYBE SKIP LAST ONE UNTIL THE OTHERS ARE DONE THEN CALL IT?
-            // TODO: - NOT COMPLETELY CONCURRENT, BUT CLOSE AND STILL BETTER THAN ITERATIVE CALLS
-            // TODO: AND THE FIRST CALL IS NOT CONCURRENT ANYWAYS. WE'D HAVE THE FIRST CALL ON STARTUP,
-            // TODO: THEN ON FETCH ALL WE'D CALL ALL OTHERS EXCEPT LAST CALL, THEN THE LAST CALL.
-            // TODO: ...THAT'S THREE SETS OF CALLS...
-            for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
-              this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this));
-            }
-            //
-            // TODO: OR... MAYBE WAIT FOR THEM ALL TO BE DONE AND THEN UPDATE FILTERS?  WE'D MOVE THE CHECK FROM
-            // TODO: USING THE NEXT QUERY PARAMS START TO USING PROMISES/ALL WITH AN ARRAY OF PROMISES
-            // TODO: HOWEVER... WE'D ALSO HAVE TO HANDLE THE USE CASE THAT ALL WERE RETRIEVED IN THE FIRST CALL
-            //
 
+          domClass.add(document.body, CSS.loading);
+          var allItemQueries = [];
+          for (var nextIndex = groupItemsData.nextQueryParams.start; nextIndex <= groupItemsData.total; nextIndex += groupItemsData.nextQueryParams.num) {
+            allItemQueries.push(this.portal.queryItems(lang.mixin({}, groupItemsData.nextQueryParams, { start: nextIndex })).then(this.addItemsToList.bind(this)));
+          }
+          all(allItemQueries).then(function () {
+            this.updateFilters();
+            domClass.remove(document.body, CSS.loading);
           }.bind(this));
+
         }
 
         // APP READY //
@@ -412,12 +500,6 @@ define([
         }.bind(this));
       }.bind(this));
 
-      // NO MORE ITEMS TO RETRIEVE //
-      if(queryResponse.nextQueryParams.start == -1) {
-        // UPDATE ITEM TYPE FILTER //
-        this.updateFilters();
-        domClass.remove(document.body, CSS.loading);
-      }
     },
 
     /**
