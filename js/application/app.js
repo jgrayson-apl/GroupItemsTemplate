@@ -240,6 +240,7 @@ define([
         return;
       }
 
+
       /**
        * CUSTOM GROUP TEMPLATE CODE STARTS HERE
        */
@@ -303,8 +304,8 @@ define([
 
             // MAKE SURE ICONS APPEAR IN CONSISTENT ORDER //
             var linksNodesList = {
-              "Download": null,
               "Video": null,
+              "Download": null,
               "Read Me": null,
               "Details": null
             };
@@ -338,11 +339,11 @@ define([
                 });
 
                 // PLACE VIDEO LINK SOME OTHER PLACE //
-                if(linkName === "Video") {
-                  domConstruct.place(node, itemCardNode);
-                } else {
+                //if(linkName === "Video") {
+                //  domConstruct.place(node, itemCardNode);
+                //} else {
                   domConstruct.place(node, linksNode);
-                }
+                //}
               }
             }
 

@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title></title>
     <meta charset="utf-8">
-    <!-- Define the versions of IE that will be used to render the page. See Microsoft documentation for details. Optional. -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Responsive -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <!-- End Responsive -->
-    <!-- Use protocol relative urls that way if the browser is viewing the page via HTTPS the js/css file will be requested using the HTTPS protocol -->
+    <link rel="icon" href="//www.esri.com/favicon.ico">
     <link rel="stylesheet" href="//js.arcgis.com/4.2/dijit/themes/claro/claro.css">
-    <link rel="stylesheet" href="//js.arcgis.com/4.2/dgrid/css/dgrid.css">
     <link rel="stylesheet" href="//js.arcgis.com/4.2/esri/css/main.css">
-    <!-- Load any application specific styles -->
+    <link rel="stylesheet" href="//js.arcgis.com/4.2/dgrid/css/dgrid.css">
     <link rel="stylesheet" href="css/boilerplate.css">
     <link rel="stylesheet" href="css/application.css">
     <script type="text/javascript" src="js/dojoConfig.js"></script>
@@ -25,27 +23,15 @@
         "boilerplate",
         "dojo/text!config/config.json",
         "dojo/text!boilerplate/settings.json",
-        "application",
-        "dijit/form/TextBox"
+        "application"
       ], function (ready, Boilerplate, configSettings, boilerplateSettings, app) {
-
         ready(function () {
-
-          // This is an example template app. It uses the boilerplateResponse returned to create a webmap, webscene or show group info.
-          // You can edit the logic directly in the app.js file or you can just follow the pattern to create your own myApp.js class.
-          // NOTE: We recommend creating your own myApp.js class as it will be easier to merge future Boilerplate updates.
-          var exampleApp = new app();
-
-          // The Boilerplate uses the config and boilterplate JSON settings, and the URL parameters to fetch and create items from
-          // ArcGIS.com or your portal. The boilerplateResponse returned contains item, webmap, webscene and/or group info.
-          // NOTE: You shouldn't need to edit the Boilerplate code, but you will need to edit the JSON settings files.
           new Boilerplate(JSON.parse(configSettings), JSON.parse(boilerplateSettings)).always(function (boilerplateResponse) {
+            var exampleApp = new app();
             exampleApp.init(boilerplateResponse);
           });
-
         });
       });
-
     </script>
   </head>
   <body class="boilerplate--loading">

@@ -345,6 +345,14 @@
   border-top    : solid 2px rgba(0, 121, 193, 0.8);
 }
 
+.item-card-badge {
+  float          : left;
+  margin-right   : 5px;
+  width          : 16px;
+  height         : 16px;
+  vertical-align : text-top;
+}
+
 .item-card:hover .item-card-title {
   white-space         : unset;
   overflow            : unset;
@@ -356,46 +364,33 @@
   border-bottom-color : transparent;
 }
 
-.item-card-badge {
-  float          : left;
-  margin-right   : 5px;
-  width          : 16px;
-  height         : 16px;
-  vertical-align : text-top;
-}
-
 .item-card-links {
-  opacity    : 0.0;
   align-self : flex-end;
   padding    : 3px;
-  background : rgba(0, 121, 193, 0.7);
+  background : rgba(255, 255, 255, 0.7);
 }
 
 .item-card:hover .item-card-links {
-  opacity : 1.0;
-}
-
-.item-card-links:hover {
-  background : rgba(0, 121, 193, 0.9);
+  background : rgba(0, 121, 193, 0.7);
 }
 
 .item-card-link {
   cursor    : pointer;
-  color     : #ddd;
+  color     : #0079c1;
   font-size : 11pt;
   padding   : 0 4px;
 }
 
-.item-card-link:hover {
+.item-card:hover .item-card-link {
   color : #fff !important;
 }
 
-a.item-card-video-link,
+/*a.item-card-video-link,*/
 a.item-card-link {
   text-decoration : none !important;
 }
 
-.item-card-video-link {
+/*.item-card-video-link {
   cursor     : pointer;
   position   : absolute;
   bottom     : 0;
@@ -411,7 +406,7 @@ a.item-card-link {
 .item-card:hover .item-card-video-link {
   background   : #0079c1;
   border-color : #0079c1;
-}
+}*/
 
 /* ==================================================================== */
 
