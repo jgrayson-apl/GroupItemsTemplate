@@ -449,7 +449,8 @@ a.item-card-link {
 }
 
 .item-snippet-text {
-  padding : 5px;
+  min-height : 50px;
+  padding    : 5px 10px;
 }
 
 .item-snippet-info {

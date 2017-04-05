@@ -49,7 +49,7 @@ define([
   //  Static Variables
   //
   //--------------------------------------------------------------------------
-
+  
   var CSS = {
     loading: "boilerplate--loading",
     error: "boilerplate--error",
@@ -311,12 +311,13 @@ define([
             };
 
             // ITEM DETAILS //
-            var descriptionNode = linksNodesList["Details"] = domConstruct.create("span", { className: "item-card-link esri-icon-description", innerHTML: item.description, title: "Details" });
-            on(descriptionNode, "click", function () {
+            var detailsNode = linksNodesList["Details"] = domConstruct.create("span", { className: "item-card-link esri-icon-description", title: "Details" });
+            on(detailsNode, "click", function () {
               openItemDetailsPage(item);
             }.bind(this));
 
             // GET LINKS FROM ITEM DESCRIPTION //
+            var descriptionNode = domConstruct.create("span", { innerHTML: item.description });
             query("a", descriptionNode).forEach(function (node) {
               if(node.innerText in linksNodesList) {
                 linksNodesList[node.innerText] = node;
@@ -333,24 +334,20 @@ define([
                 node.title = node.title || linkName;
                 node.innerText = "";
 
-                // PREVENT CARD ITEM ACTION //
+                // PREVENT CARD ITEM CLICK ACTION //
                 on(node, "click", function (evt) {
                   evt.stopPropagation();
                 });
 
-                // PLACE VIDEO LINK SOME OTHER PLACE //
-                //if(linkName === "Video") {
-                //  domConstruct.place(node, itemCardNode);
-                //} else {
-                  domConstruct.place(node, linksNode);
-                //}
+                // ADD LINK TO LINKS NODE //
+                domConstruct.place(node, linksNode);
               }
             }
 
             // TOOLTIP //
             var itemTooltip = new Tooltip({
               showDelay: 800,
-              label: lang.replace("<div class='item-snippet-text'>{snippet}</div><div class='item-snippet-info'>A {displayName} by {owner}</div>", item),
+              label: lang.replace("<div class='item-snippet-text'>{snippet}</div><div class='item-snippet-info'>A {displayName} by {owner}</div>", lang.mixin({}, item, { snippet: item.snippet || item.title })),
               connectId: [itemCardNode]
             });
 
