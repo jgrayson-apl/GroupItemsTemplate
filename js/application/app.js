@@ -49,7 +49,7 @@ define([
   //  Static Variables
   //
   //--------------------------------------------------------------------------
-  
+
   var CSS = {
     loading: "boilerplate--loading",
     error: "boilerplate--error",
@@ -597,10 +597,12 @@ define([
 
       // ITEM TEXT FILTER //
       if(this.config.useTextFilter) {
+        // SET INITIAL TEXT FILTER //
+        this.itemTextFilter = this.config.itemTextFilter;
         // TEXT FILTER INPUT //
         this.filterInput = new TextBox({
           style: "width:100%; padding:5px;",
-          value: this.config.itemTextFilter,
+          value: this.itemTextFilter,
           placeHolder: "...text filter...",
           title: "Filter based on the title, summary, or description",
           intermediateChanges: true,
