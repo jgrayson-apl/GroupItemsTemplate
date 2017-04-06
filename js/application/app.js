@@ -73,7 +73,7 @@ define([
     LINKS_CLASSNAMES: {
       "Details": "item-card-link esri-icon-description",
       "Read Me": "item-card-link esri-icon-documentation",
-      "Video": "item-card-video-link esri-icon-media2",
+      "Video": "item-card-link esri-icon-media2",
       "Download": "item-card-link esri-icon-download"
     },
 
@@ -298,6 +298,10 @@ define([
             var itemTitleNode = domConstruct.create("div", { className: "item-card-title", innerHTML: item.title.replace(/_/g, " ") }, itemCardNode);
             // ITEM TYPE ICON //
             domConstruct.create("img", { className: "item-card-badge", src: item.iconUrl }, itemTitleNode, "first");
+            // DISPLAY TITLES INITIALLY //
+            if(!this.config.initialItemTitle) {
+              domClass.add(itemTitleNode,"item-card-title-hidden");
+            }
 
             // LINKS //
             var linksNode = domConstruct.create("div", { className: "item-card-links" }, itemCardNode);
@@ -311,7 +315,7 @@ define([
             };
 
             // ITEM DETAILS //
-            var detailsNode = linksNodesList["Details"] = domConstruct.create("span", { className: "item-card-link esri-icon-description", title: "Details" });
+            var detailsNode = linksNodesList["Details"] = domConstruct.create("a");
             on(detailsNode, "click", function () {
               openItemDetailsPage(item);
             }.bind(this));

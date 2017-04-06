@@ -25,6 +25,7 @@
     ]
   },
   "initialItemLayout": "grid",
+  "initialItemTitle": false,
   "useTextFilter": true,
   "useAccessFilter": true,
   "useTypeFilter": true,

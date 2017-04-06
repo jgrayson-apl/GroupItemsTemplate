@@ -10,7 +10,7 @@
     },
     {
       "category": "<b>Layout</b>",
-      "paragraph": "Initial item layout, either grid or list.",
+      "paragraph": "Initial item layout, either grid or list, and display of initial titles.",
       "fields": [
         {
           "type": "options",
@@ -27,6 +27,12 @@
               "value": "list"
             }
           ]
+        },
+        {
+          "type": "boolean",
+          "fieldName": "initialItemTitle",
+          "label": "Display item title",
+          "tooltip": "Display item title by default or display on item hover."
         }
       ]
     },
@@ -197,6 +203,7 @@
   "values": {
     "group": "",
     "initialItemLayout": "grid",
+    "initialItemTitle": false,
     "useTextFilter": true,
     "useAccessFilter": true,
     "useTypeFilter": true,
