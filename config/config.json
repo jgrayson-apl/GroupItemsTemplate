@@ -32,6 +32,7 @@
   "useTypeKeywordsFilter": true,
   "useTagsFilter": true,
   "itemTextFilter": "",
+  "itemTagFilter": "",
   "column_thumbnailUrl": false,
   "column_title": true,
   "column_id": false,

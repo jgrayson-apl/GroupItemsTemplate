@@ -300,7 +300,7 @@ define([
             domConstruct.create("img", { className: "item-card-badge", src: item.iconUrl }, itemTitleNode, "first");
             // DISPLAY TITLES INITIALLY //
             if(!this.config.initialItemTitle) {
-              domClass.add(itemTitleNode,"item-card-title-hidden");
+              domClass.add(itemTitleNode, "item-card-title-hidden");
             }
 
             // LINKS //
@@ -740,6 +740,12 @@ define([
 
       // ITEM TAGS FILTER //
       if(this.config.useTagsFilter) {
+
+        /* if(this.config.itemTagFilter && (this.config.itemTagFilter.length > 0)) {
+         this.itemTags = {};
+         this.itemTags[this.config.itemTagFilter] = true;
+         }*/
+
         // STORE OF ITEM TAGS //
         this.itemTagsStore = new TrackableMemory({ data: [] });
         // ITEM TAGS LIST //
@@ -755,7 +761,7 @@ define([
             return domConstruct.create("span", { className: "item-tag", innerHTML: itemType.label });
           }
         }, "item-tag-list-node");
-        // ITEM TYPE SELECTED //
+        // ITEM TAG SELECTED //
         this.itemTagList.on("dgrid-select", function (evt) {
           this.itemTags = this.itemTagList.selection;
           this.applyFilter();
@@ -766,7 +772,7 @@ define([
         }.bind(this));
         this.itemTagList.startup();
 
-        // CLEAR TYPE FILTER //
+        // CLEAR TAG FILTER //
         on(dom.byId("clear-tag-filter"), "click", function () {
           this.itemTagList.clearSelection();
         }.bind(this));
@@ -827,6 +833,12 @@ define([
           }
 
         }.bind(this));
+
+        // SELECT INITIAL TAG //
+        var itemTag = this.itemTagsStore.getSync(this.config.itemTagFilter);
+        if(itemTag) {
+          this.itemTagList.select(this.config.itemTagFilter);
+        }
 
         // APPLY FILTERS //
         this.applyFilter();

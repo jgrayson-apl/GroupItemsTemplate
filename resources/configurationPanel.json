@@ -86,6 +86,19 @@
       ]
     },
     {
+      "category": "<b>Initial Tag Filter</b>",
+      "paragraph": "Filter based on a tag",
+      "fields": [
+        {
+          "type": "string",
+          "fieldName": "itemTagFilter",
+          "label": "Tag Filter",
+          "tooltip": "Tag Filter",
+          "placeHolder": "enter tag filter here"
+        }
+      ]
+    },
+    {
       "category": "<b>Initial Item Columns</b>",
       "paragraph": "Select the item properties initially visible in List View.",
       "fields": [
@@ -210,6 +223,7 @@
     "useTypeKeywordsFilter": true,
     "useTagsFilter": true,
     "itemTextFilter": "",
+    "itemTagFilter": "",
     "column_thumbnailUrl": false,
     "column_title": true,
     "column_id": false,
