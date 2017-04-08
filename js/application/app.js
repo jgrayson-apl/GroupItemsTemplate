@@ -741,11 +741,6 @@ define([
       // ITEM TAGS FILTER //
       if(this.config.useTagsFilter) {
 
-        /* if(this.config.itemTagFilter && (this.config.itemTagFilter.length > 0)) {
-         this.itemTags = {};
-         this.itemTags[this.config.itemTagFilter] = true;
-         }*/
-
         // STORE OF ITEM TAGS //
         this.itemTagsStore = new TrackableMemory({ data: [] });
         // ITEM TAGS LIST //
