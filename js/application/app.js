@@ -240,13 +240,12 @@ define([
         return;
       }
 
-
       /**
        * CUSTOM GROUP TEMPLATE CODE STARTS HERE
        */
 
       // PORTAL //
-      this.portal = new Portal({ authMode: "immediate" });
+      this.portal = new Portal({ authMode: "auto" }); // auto immediate
       this.portal.load().then(function () {
 
         // GROUP INFO //
@@ -258,8 +257,8 @@ define([
 
         // DETAILS //
         var detailsNode = dom.byId("details-node");
-        dom.byId("info-user-fullname").innerHTML = this.portal.user.fullName;
-        dom.byId("info-portal-name").innerHTML = this.portal.name;
+        dom.byId("info-user-fullname").innerHTML = this.portal.user ? this.portal.user.fullName : "";
+        dom.byId("info-portal-name").innerHTML = this.portal.name || "ArcGIS.com";
         dom.byId("info-group-title").innerHTML = this.groupInfo.title;
 
         // SET LAYOUT DISPLAY //
