@@ -406,8 +406,8 @@ define([
           // ITEM RELATED PAGE URL //
           var itemRelatedPageUrl = lang.replace(pageUrlTemplate, {
             protocol: document.location.protocol,
-            urlKey: this.portal.urlKey,
-            customBaseUrl: this.portal.customBaseUrl,
+            urlKey: this.portal.urlKey || "www",
+            customBaseUrl: this.portal.customBaseUrl || "arcgis.com",
             itemId: item.id,
             itemUrl: item.url
           });
